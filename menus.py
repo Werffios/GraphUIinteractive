@@ -1,9 +1,12 @@
 import tkinter as tk
-
+from tkinter.filedialog import askopenfile
 
 def archivo_nuevo_presionado():
     print("¡Has presionado para crear un nuevo archivo!")
 
+def abrirarchivo():
+    print( askopenfile(title='Please select one (any) frame from your set of images.',
+                       mode ='r', filetypes =[('JSON Files', '*.json')]).read())
 
 def menuarchivo(menu, bar_menu):
     sub_menu_archivo_nuevo = tk.Menu(menu, tearoff=False)
@@ -22,7 +25,7 @@ def menuarchivo(menu, bar_menu):
     menu.add_command(
         label="Abrir",
         ## accelerator="Ctrl+N",
-        command=archivo_nuevo_presionado
+        command=abrirarchivo
     )
     menu.add_command(
         label="Guardar",

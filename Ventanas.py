@@ -32,20 +32,25 @@ class VentanaSecundaria(tk.Toplevel):
 class VentanaPrincipal(tk.Tk):
     def __init__(self, *args, **kwargs):  ## Queda abierto a n argumentos o n argumentos con identificador
         super().__init__(*args, **kwargs)  ## Se almacena por herencia el *args **kwargs
-        self.config(width=400, height=300)
+        self.config(width=1200, height=700)
         self.title("Ventana principal")
 
+
+
+
+
+    def init_menubar(self):
         bar_menu = tk.Menu()  ## Crear barra de menú
-        self.config(menu=bar_menu)  ## Insertar la barra de menús al la principal  (Se deben añadir menus, sino no se ve)
+        self.config(
+            menu=bar_menu)  ## Insertar la barra de menús al la principal  (Se deben añadir menus, sino no se ve)
 
-        menu_archivo = tk.Menu(bar_menu, tearoff=False) ## Creacion menú archivo
-        menu_archivo, bar_menu = menuarchivo(menu_archivo, bar_menu) ##Funcion que añade submenus, etc
-        bar_menu.add_cascade(menu=menu_archivo, label="Archivo") ##Añado a la barra de menus
+        menu_archivo = tk.Menu(bar_menu, tearoff=False)  ## Creacion menú archivo
+        menu_archivo, bar_menu = menuarchivo(menu_archivo, bar_menu)  ##Funcion que añade submenus, etc
+        bar_menu.add_cascade(menu=menu_archivo, label="Archivo")  ##Añado a la barra de menus
 
-
-        menu_editar = tk.Menu(bar_menu, tearoff=False) ## Creacion menú editar
-        menu_editar, bar_menu = menueditar(menu_editar, bar_menu) ##Funcion que añade submenus, etc
-        bar_menu.add_cascade(menu=menu_editar, label="Editar") ##Añado a la barra de menus
+        menu_editar = tk.Menu(bar_menu, tearoff=False)  ## Creacion menú editar
+        menu_editar, bar_menu = menueditar(menu_editar, bar_menu)  ##Funcion que añade submenus, etc
+        bar_menu.add_cascade(menu=menu_editar, label="Editar")  ##Añado a la barra de menus
 
         menu_analizar = tk.Menu(bar_menu, tearoff=False)  ## Creacion menú analizar
         menu_analizar, bar_menu = menuanalizar(menu_analizar, bar_menu)  ##Funcion que añade submenus, etc
