@@ -9,7 +9,7 @@ class VentanaSecundaria(tk.Toplevel):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.config(width=300, height=200)
+        self.config(width=500, height=400)
         self.title("Ventana secundaria")
         self.boton_cerrar = ttk.Button(
             self,
@@ -38,9 +38,10 @@ class VentanaPrincipal(tk.Tk):
         self.title("Ventana principal")
 
         bar_menu = tk.Menu()  ## Crear barra de menú
-        self.config(
-        menu=bar_menu)  ## Insertar la barra de menús al la principal  (Se deben añadir menus, sino no se ve)
+        self.config(menu=bar_menu)  ## Insertar la barra de menús al la principal  (Se deben añadir menus, sino no se ve)
         menu_archivo = tk.Menu(bar_menu, tearoff=False)
+
+
         sub_menu_archivo_nuevo = tk.Menu(menu_archivo, tearoff=False)
         sub_menu_archivo_nuevo.add_command(
             label="Personalizado",
@@ -53,6 +54,59 @@ class VentanaPrincipal(tk.Tk):
             command=archivo_nuevo_presionado
         )
         menu_archivo.add_cascade(menu=sub_menu_archivo_nuevo, label="Nuevo grafo")
+
+        menu_archivo.add_command(
+            label="Abrir",
+            ## accelerator="Ctrl+N",
+            command=archivo_nuevo_presionado
+        )
+        menu_archivo.add_command(
+            label="Guardar",
+            ## accelerator="Ctrl+N",
+            command=archivo_nuevo_presionado
+        )
+        menu_archivo.add_command(
+            label="Guardar como",
+            ## accelerator="Ctrl+N",
+            command=archivo_nuevo_presionado
+        )
+
+
+        sub_menu_archivo_exportar = tk.Menu(menu_archivo, tearoff=False)
+        sub_menu_archivo_exportar.add_command(
+            label="Excel",
+            ## accelerator="Ctrl+N",
+            command=archivo_nuevo_presionado
+        )
+        sub_menu_archivo_exportar.add_command(
+            label="Imagen",
+            ## accelerator="Ctrl+N",
+            command=archivo_nuevo_presionado
+        )
+        sub_menu_archivo_exportar.add_command(
+            label="PDF",
+            ## accelerator="Ctrl+N",
+            command=archivo_nuevo_presionado
+        )
+        menu_archivo.add_cascade(menu=sub_menu_archivo_exportar, label="Exportar")
+
+        menu_archivo.add_command(
+            label="Importar datos",
+            ## accelerator="Ctrl+N",
+            command=archivo_nuevo_presionado
+        )
+        menu_archivo.add_command(
+            label="Inicio",
+            ## accelerator="Ctrl+N",
+            command=archivo_nuevo_presionado
+        )
+        menu_archivo.add_command(
+            label="Imprimir",
+            ## accelerator="Ctrl+N",
+            command=archivo_nuevo_presionado
+        )
+
+
 
 
 
