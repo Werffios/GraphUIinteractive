@@ -27,17 +27,44 @@ class VentanaSecundaria(tk.Toplevel):
         return super().destroy()
 
 
+def archivo_nuevo_presionado():
+    print("¡Has presionado para crear un nuevo archivo!")
+
+
 class VentanaPrincipal(tk.Tk):
-    def __init__(self, *args, **kwargs):    ## Queda abierto a n argumentos o n argumentos con identificador
-        super().__init__(*args, **kwargs)   ## Se almacena por herencia el *args **kwargs
+    def __init__(self, *args, **kwargs):  ## Queda abierto a n argumentos o n argumentos con identificador
+        super().__init__(*args, **kwargs)  ## Se almacena por herencia el *args **kwargs
         self.config(width=400, height=300)
         self.title("Ventana principal")
-        self.boton_abrir = ttk.Button(
-            self,
-            text="Abrir ventana secundaria",
-            command=self.abrir_ventana_secundaria
+
+        bar_menu = tk.Menu()  ## Crear barra de menú
+        self.config(
+        menu=bar_menu)  ## Insertar la barra de menús al la principal  (Se deben añadir menus, sino no se ve)
+        menu_archivo = tk.Menu(bar_menu, tearoff=False)
+        sub_menu_archivo_nuevo = tk.Menu(menu_archivo, tearoff=False)
+        sub_menu_archivo_nuevo.add_command(
+            label="Personalizado",
+            ## accelerator="Ctrl+N",
+            command=archivo_nuevo_presionado
         )
-        self.boton_abrir.place(x=100, y=100)
+        sub_menu_archivo_nuevo.add_command(
+            label="Aleatorio",
+            ## accelerator="Ctrl+N",
+            command=archivo_nuevo_presionado
+        )
+        menu_archivo.add_cascade(menu=sub_menu_archivo_nuevo, label="Nuevo grafo")
+
+
+
+
+        bar_menu.add_cascade(menu=menu_archivo, label="Archivo")
+
+
+
+
+
+
+
 
     def abrir_ventana_secundaria(self):
         if not VentanaSecundaria.en_uso:
