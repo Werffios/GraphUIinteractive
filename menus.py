@@ -5,7 +5,7 @@ def archivo_nuevo_presionado():
     print("¡Has presionado para crear un nuevo archivo!")
 
 def abrirarchivo():
-    print( askopenfile(title='Please select one (any) frame from your set of images.',
+    print(askopenfile(title='Please select one (any) frame from your set of images.',
                        mode ='r', filetypes =[('JSON Files', '*.json')]).read())
 
 def menuarchivo(menu, bar_menu):

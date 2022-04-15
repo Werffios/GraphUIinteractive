@@ -1,5 +1,11 @@
 
 from tkinter import ttk
+
+import networkx as nx
+from matplotlib import pyplot as plt
+from pandas import DataFrame
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
 from menus import *
 
 class VentanaSecundaria(tk.Toplevel):
@@ -32,12 +38,24 @@ class VentanaSecundaria(tk.Toplevel):
 class VentanaPrincipal(tk.Tk):
     def __init__(self, *args, **kwargs):  ## Queda abierto a n argumentos o n argumentos con identificador
         super().__init__(*args, **kwargs)  ## Se almacena por herencia el *args **kwargs
-        self.config(width=1200, height=700)
+        self.geometry("1200x700")
         self.title("Ventana principal")
+        self.config(bg='#F2B33D')
 
 
 
+        """G = nx.complete_graph(8)
+        nx.draw(G)
 
+        f = plt.Figure(figsize=(5, 5), dpi=100)
+        a = f.add_subplot(111)
+        pos = nx.spring_layout(G)
+        nx.draw(G, pos, ax=a)
+        ######################
+
+        # a tk.DrawingArea
+        canvas = FigureCanvasTkAgg(f, master=frm)
+        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)"""
 
     def init_menubar(self):
         bar_menu = tk.Menu()  ## Crear barra de menú
@@ -72,6 +90,31 @@ class VentanaPrincipal(tk.Tk):
         menu_ayuda, bar_menu = menuayuda(menu_ayuda, bar_menu)  ##Funcion que añade submenus, etc
         bar_menu.add_cascade(menu=menu_ayuda, label="Ayuda")  ##Añado a la barra de menus
 
-    def abrir_ventana_secundaria(self):
+    def init_buttons(self):
+        frm = ttk.Frame(self)
+        frm.grid(row=0, column=0, padx=20, pady=20)
+        label_Add_edge_title = tk.Label(frm, text="AGREGAR ARISTA", font=("Segoe UI", 25))
+        label_Add_edge_title.grid(row=0, columnspan=2, padx=20, pady=5, sticky="e")
+
+        label_Add_edge_vertice_o = tk.Label(frm, text="Nodo origen", font=("Segoe UI", 11))
+        label_Add_edge_vertice_o.grid(row=1, column=0, sticky="e")
+
+        entry_Add_edge_vertice_o = tk.Entry(frm, name="entrada origen AggVertice")
+        entry_Add_edge_vertice_o.grid(row=1, column=1, sticky="w")
+
+        label_Add_edge_vertice_d = tk.Label(frm, text="Nodo destino", font=("Segoe UI", 11))
+        label_Add_edge_vertice_d.grid(row=2, column=0, sticky="e")
+
+        entry_Add_edge_vertice_d = tk.Entry(frm, name="entrada destino AggVertice")
+        entry_Add_edge_vertice_d.grid(row=2, column=1, sticky="w")
+
+        label_Add_edge_peso = tk.Label(frm, text="Peso", font=("Segoe UI", 11))
+        label_Add_edge_peso.grid(row=3, column=0, sticky="e")
+
+        entry_Add_edge_peso = tk.Entry(frm, name="entrada peso AggVertice")
+        entry_Add_edge_peso.grid(row=3, column=1, sticky="w")
+
+
+def abrir_ventana_secundaria(self):
         if not VentanaSecundaria.en_uso:
             self.ventana_secundaria = VentanaSecundaria()
