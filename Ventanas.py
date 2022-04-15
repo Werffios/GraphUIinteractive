@@ -2,7 +2,6 @@ from tkinter import ttk
 
 import networkx as nx
 from matplotlib import pyplot as plt
-from pandas import DataFrame
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 from menus import *
@@ -143,7 +142,7 @@ class VentanaPrincipal(tk.Tk):
         self.G = nx.complete_graph(4)
         nx.draw(self.G)
 
-        self.figure = plt.Figure(figsize=(5, 5), dpi=100)
+        self.figure = plt.Figure(figsize=(5, 4), dpi=100)
         self.a = self.figure.add_subplot(111)
         self.pos = nx.spring_layout(self.G)
         nx.draw(self.G, self.pos, ax=self.a)

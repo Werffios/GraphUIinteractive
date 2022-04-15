@@ -38,11 +38,4 @@ Ventana.wm_geometry('700x350')"""
 
 
 
-
-
-
-
-
-
-
 Ventana.mainloop()
