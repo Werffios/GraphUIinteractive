@@ -1,4 +1,3 @@
-
 from tkinter import ttk
 
 import networkx as nx
@@ -33,29 +32,34 @@ class VentanaSecundaria(tk.Toplevel):
         return super().destroy()
 
 
-
-
 class VentanaPrincipal(tk.Tk):
     def __init__(self, *args, **kwargs):  ## Queda abierto a n argumentos o n argumentos con identificador
         super().__init__(*args, **kwargs)  ## Se almacena por herencia el *args **kwargs
+        self.label_Add_edge_title = None
+        self.label_Add_edge_vertice_o = None
+        self.label_Add_edge_vertice_d = None
+        self.label_Add_edge_peso = None
+        self.entry_Add_edge_vertice_o = None
+        self.entry_Add_edge_vertice_d = None
+        self.entry_Add_edge_peso = None
+        self.button_Add_edge = None
+        self.frameAdd_edge = ttk.Frame(self)
+
+        self.label_Add_node_title = None
+        self.label_Add_node = None
+        self.entry_Add_node = None
+        self.button_Add_node = None
+        self.frameAdd_node = ttk.Frame(self)
+
+        self.frameFigure = ttk.Frame(self)
+        self.figure = None
+
+
+
         self.geometry("1200x700")
         self.title("Ventana principal")
         self.config(bg='#F2B33D')
 
-
-
-        """G = nx.complete_graph(8)
-        nx.draw(G)
-
-        f = plt.Figure(figsize=(5, 5), dpi=100)
-        a = f.add_subplot(111)
-        pos = nx.spring_layout(G)
-        nx.draw(G, pos, ax=a)
-        ######################
-
-        # a tk.DrawingArea
-        canvas = FigureCanvasTkAgg(f, master=frm)
-        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)"""
 
     def init_menubar(self):
         bar_menu = tk.Menu()  ## Crear barra de menú
@@ -91,28 +95,80 @@ class VentanaPrincipal(tk.Tk):
         bar_menu.add_cascade(menu=menu_ayuda, label="Ayuda")  ##Añado a la barra de menus
 
     def init_buttons(self):
-        frm = ttk.Frame(self)
-        frm.grid(row=0, column=0, padx=20, pady=20)
-        label_Add_edge_title = tk.Label(frm, text="AGREGAR ARISTA", font=("Segoe UI", 25))
-        label_Add_edge_title.grid(row=0, columnspan=2, padx=20, pady=5, sticky="e")
+        self.frameAdd_edge.grid(row=0, column=0, padx=20, pady=20)
 
-        label_Add_edge_vertice_o = tk.Label(frm, text="Nodo origen", font=("Segoe UI", 11))
-        label_Add_edge_vertice_o.grid(row=1, column=0, sticky="e")
+        self.label_Add_edge_title = tk.Label(self.frameAdd_edge, text="AGREGAR ARISTA", font=("Segoe UI", 25))
+        self.label_Add_edge_title.grid(row=0, columnspan=2, padx=20, pady=5, sticky="e")
 
-        entry_Add_edge_vertice_o = tk.Entry(frm, name="entrada origen AggVertice")
-        entry_Add_edge_vertice_o.grid(row=1, column=1, sticky="w")
+        self.label_Add_edge_vertice_o = tk.Label(self.frameAdd_edge, text="Nodo origen", font=("Segoe UI", 11))
+        self.label_Add_edge_vertice_o.grid(row=1, column=0, sticky="e")
 
-        label_Add_edge_vertice_d = tk.Label(frm, text="Nodo destino", font=("Segoe UI", 11))
-        label_Add_edge_vertice_d.grid(row=2, column=0, sticky="e")
+        self.entry_Add_edge_vertice_o = tk.Entry(self.frameAdd_edge, name="entrada origen AggVertice")
+        self.entry_Add_edge_vertice_o.grid(row=1, column=1, sticky="w")
 
-        entry_Add_edge_vertice_d = tk.Entry(frm, name="entrada destino AggVertice")
-        entry_Add_edge_vertice_d.grid(row=2, column=1, sticky="w")
+        self.label_Add_edge_vertice_d = tk.Label(self.frameAdd_edge, text="Nodo destino", font=("Segoe UI", 11))
+        self.label_Add_edge_vertice_d.grid(row=2, column=0, sticky="e")
 
-        label_Add_edge_peso = tk.Label(frm, text="Peso", font=("Segoe UI", 11))
-        label_Add_edge_peso.grid(row=3, column=0, sticky="e")
+        self.entry_Add_edge_vertice_d = tk.Entry(self.frameAdd_edge, name="entrada destino AggVertice")
+        self.entry_Add_edge_vertice_d.grid(row=2, column=1, sticky="w")
 
-        entry_Add_edge_peso = tk.Entry(frm, name="entrada peso AggVertice")
-        entry_Add_edge_peso.grid(row=3, column=1, sticky="w")
+        self.label_Add_edge_peso = tk.Label(self.frameAdd_edge, text="Peso", font=("Segoe UI", 11))
+        self.label_Add_edge_peso.grid(row=3, column=0, sticky="e")
+
+        self.entry_Add_edge_peso = tk.Entry(self.frameAdd_edge, name="entrada peso AggVertice")
+        self.entry_Add_edge_peso.grid(row=3, column=1, sticky="w")
+
+        self.button_Add_edge = tk.Button(self.frameAdd_edge, text="Agregar")
+        self.button_Add_edge.grid(row=4, column=1, ipadx=52, pady=5, sticky="w")
+
+
+
+        self.frameAdd_node.grid(row=1, column=0)
+
+        self.label_Add_node_title = tk.Label(self.frameAdd_node, text="AGREGAR NODO", font=("Segoe UI", 25))
+        self.label_Add_node_title.grid(row=0, columnspan=2, padx=20, pady=5, sticky="e")
+
+        self.label_Add_node = tk.Label(self.frameAdd_node, text="Nombre nodo", font=("Segoe UI", 11))
+        self.label_Add_node.grid(row=1, column=0, sticky="e")
+
+        self.entry_Add_node = tk.Entry(self.frameAdd_node, name="entrada nodo sin conexion")
+        self.entry_Add_node.grid(row=1, column=1, sticky="w")
+
+        self.button_Add_node = tk.Button(self.frameAdd_node, text="Agregar")
+        self.button_Add_node.grid(row=2, column=1, ipadx=52, pady=5, sticky="w")
+
+
+        self.frameFigure.grid(row=0, column=1, rowspan=10, columnspan=4, pady=20)
+
+        self.G = nx.complete_graph(4)
+        nx.draw(self.G)
+
+        self.figure = plt.Figure(figsize=(5, 5), dpi=100)
+        self.a = self.figure.add_subplot(111)
+        self.pos = nx.spring_layout(self.G)
+        nx.draw(self.G, self.pos, ax=self.a)
+
+        canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
+        canvas.draw()
+        canvas.get_tk_widget().grid()
+
+
+
+
+        """G = nx.complete_graph(8)
+        nx.draw(G)
+
+        f = plt.Figure(figsize=(5, 5), dpi=100)
+        a = f.add_subplot(111)
+        pos = nx.spring_layout(G)
+        nx.draw(G, pos, ax=a)
+        ######################
+
+        # a tk.DrawingArea
+        canvas = FigureCanvasTkAgg(f, master=self)
+        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)"""
+
+
 
 
 def abrir_ventana_secundaria(self):
