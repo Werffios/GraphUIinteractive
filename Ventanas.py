@@ -1,6 +1,7 @@
 from tkinter import ttk
 
 import networkx as nx
+import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
@@ -59,6 +60,7 @@ class VentanaPrincipal(tk.Tk):
         self.title("Ventana principal")
         self.config(bg='#F2B33D')
 
+        self.G = nx.Graph()
 
     def init_menubar(self):
         bar_menu = tk.Menu()  ## Crear barra de menú
@@ -136,21 +138,21 @@ class VentanaPrincipal(tk.Tk):
         self.button_Add_node = tk.Button(self.frameAdd_node, text="Agregar")
         self.button_Add_node.grid(row=2, column=1, ipadx=52, pady=5, sticky="w")
 
-
         self.frameFigure.grid(row=0, column=1, rowspan=10, columnspan=4, pady=20)
 
-        self.G = nx.complete_graph(4)
-        nx.draw(self.G)
 
         self.figure = plt.Figure(figsize=(5, 4), dpi=100)
-        self.a = self.figure.add_subplot(111)
+        self.ax = self.figure.add_subplot(111)
         self.pos = nx.spring_layout(self.G)
-        nx.draw(self.G, self.pos, ax=self.a)
+        nx.draw(self.G, self.pos, ax=self.ax)
 
-        canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
-        canvas.draw()
-        canvas.get_tk_widget().grid()
+        self.canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
+        self.canvas.draw()
+        self.canvas.get_tk_widget().grid()
 
+        self.button_Add_node.bind("<Button-1>", self.func_agregar_nodo)
+
+        self.button_Add_edge.bind("<Button-1>", self.func_agregar_arista)
 
 
 
@@ -167,7 +169,26 @@ class VentanaPrincipal(tk.Tk):
         canvas = FigureCanvasTkAgg(f, master=self)
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)"""
 
+    def func_agregar_nodo(self, *args):
+        if(self.entry_Add_node.get()!=''):
 
+            self.G.add_node(self.entry_Add_node.get())
+            self.entry_Add_node.delete(0, tk.END)
+
+            print("Nodos:", list(self.G.nodes))
+        #self.entry_Add_node
+
+
+    def func_agregar_arista(self, *args):
+        if not(self.entry_Add_edge_peso.get().isnumeric()):
+            self.entry_Add_edge_peso.delete(0, tk.END)
+
+        elif (self.entry_Add_edge_vertice_o.get() != '') and (self.entry_Add_edge_peso.get() != '') and (self.entry_Add_edge_vertice_d.get() != ''):
+            self.G.add_edge(self.entry_Add_edge_vertice_o.get(), self.entry_Add_edge_vertice_d.get(), weight=int(self.entry_Add_edge_peso.get()))
+            self.entry_Add_edge_vertice_o.delete(0, tk.END)
+            self.entry_Add_edge_vertice_d.delete(0, tk.END)
+            self.entry_Add_edge_peso.delete(0, tk.END)
+            print("Edges:", list(self.G.edges))
 
 
 def abrir_ventana_secundaria(self):
