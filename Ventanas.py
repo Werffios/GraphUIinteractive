@@ -1,7 +1,6 @@
 from tkinter import ttk
 
 import networkx as nx
-import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
@@ -141,20 +140,24 @@ class VentanaPrincipal(tk.Tk):
         self.frameFigure.grid(row=0, column=1, rowspan=10, columnspan=4, pady=20)
 
 
-        self.figure = plt.Figure(figsize=(5, 4), dpi=100)
+        self.figure = plt.Figure(figsize=(5, 4), dpi=110)
         self.ax = self.figure.add_subplot(111)
         self.pos = nx.spring_layout(self.G)
-        nx.draw(self.G, self.pos, ax=self.ax)
+        nx.draw_networkx(self.G, self.pos, ax=self.ax)
 
         self.canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
         self.canvas.draw()
         self.canvas.get_tk_widget().grid()
 
-        self.button_Add_node.bind("<Button-1>", self.func_agregar_nodo)
-
         self.button_Add_edge.bind("<Button-1>", self.func_agregar_arista)
 
+        self.button_Add_node.bind("<Button-1>", self.func_agregar_nodo)
 
+        self.entry_Add_node.bind("<Return>", self.func_agregar_nodo)
+
+        self.entry_Add_edge_vertice_o.bind("<Return>", self.func_agregar_arista)
+        self.entry_Add_edge_vertice_d.bind("<Return>", self.func_agregar_arista)
+        self.entry_Add_edge_peso.bind("<Return>", self.func_agregar_arista)
 
         """G = nx.complete_graph(8)
         nx.draw(G)
@@ -169,14 +172,39 @@ class VentanaPrincipal(tk.Tk):
         canvas = FigureCanvasTkAgg(f, master=self)
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)"""
 
+    def func_actaulizar_figure(self, *args):
+
+        self.frameFigure.grid_remove()
+        self.frameFigure.grid_forget()
+
+        self.frameFigure = ttk.Frame(self)
+        self.frameFigure.grid(row=0, column=1, rowspan=10, columnspan=4, pady=20)
+
+        self.figure = plt.Figure(figsize=(5, 4), dpi=110)
+        self.ax = self.figure.add_subplot(111)
+
+        self.pos = nx.random_layout(self.G)
+
+        ##self.pos = nx.spring_layout(self.G)
+        nx.draw_networkx(self.G, self.pos, ax=self.ax)
+
+        canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
+        canvas.get_tk_widget().grid()
+
+
+    def func_prueba(self, *args):
+        print("probado")
+
     def func_agregar_nodo(self, *args):
         if(self.entry_Add_node.get()!=''):
 
             self.G.add_node(self.entry_Add_node.get())
+
+            self.func_actaulizar_figure()
+
             self.entry_Add_node.delete(0, tk.END)
 
             print("Nodos:", list(self.G.nodes))
-        #self.entry_Add_node
 
 
     def func_agregar_arista(self, *args):
@@ -185,11 +213,13 @@ class VentanaPrincipal(tk.Tk):
 
         elif (self.entry_Add_edge_vertice_o.get() != '') and (self.entry_Add_edge_peso.get() != '') and (self.entry_Add_edge_vertice_d.get() != ''):
             self.G.add_edge(self.entry_Add_edge_vertice_o.get(), self.entry_Add_edge_vertice_d.get(), weight=int(self.entry_Add_edge_peso.get()))
+
+            self.func_actaulizar_figure()
+
             self.entry_Add_edge_vertice_o.delete(0, tk.END)
             self.entry_Add_edge_vertice_d.delete(0, tk.END)
             self.entry_Add_edge_peso.delete(0, tk.END)
             print("Edges:", list(self.G.edges))
-
 
 def abrir_ventana_secundaria(self):
         if not VentanaSecundaria.en_uso:
