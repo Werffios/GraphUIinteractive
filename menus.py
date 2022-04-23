@@ -1,8 +1,41 @@
 import tkinter as tk
 from tkinter.filedialog import askopenfile
 
+class crear_ventana(tk.Tk):
+    def __init__(self, *args, **kwargs):  ## Queda abierto a n argumentos o n argumentos con identificador
+        super().__init__(*args, **kwargs)  ## Se almacena por herencia el *args **kwargs
+
+        self.frameDikstra = tk.Frame(self)
+
+        self.geometry("800x400")
+        self.title("Dikstra")
+        self.config(bg='#F2B34D')
+
+        self.frameDikstra.grid(row=0, column=0, padx=20, pady=20)
+
+        self.labelTitleDikstra = tk.Label(self.frameDikstra, text="ALGORITMO DIKSTRA")
+        self.labelTitleDikstra.grid(row=0, column=0, columnspan=2)
+
+        self.labelorigen = tk.Label(self.frameDikstra, text="NodoOrigen")
+        self.labelorigen.grid(row=1, column=0)
+
+        self.entryOrigen = tk.Entry(self.frameDikstra, name="entryNodoOrigen")
+        self.entryOrigen.grid(row=1, column=1)
+
+        self.labeldestino = tk.Label(self.frameDikstra, text="Nododestino")
+        self.labeldestino.grid(row=2, column=0)
+
+        self.entryDestino = tk.Entry(self.frameDikstra, name="entryNodoDestino")
+        self.entryDestino.grid(row=2, column=1)
+
+
+
 def archivo_nuevo_presionado():
     print("¡Has presionado para crear un nuevo archivo!")
+
+
+
+
 
 def abrirarchivo():
     print(askopenfile(title='Please select one (any) frame from your set of images.',
@@ -123,9 +156,9 @@ def menueditar(menu, bar_menu):
 def menuanalizar(menu, bar_menu):
     sub_menu_analizar_algoritmo = tk.Menu(menu, tearoff=False)
     sub_menu_analizar_algoritmo.add_command(
-        label="Algoritmo 1",
+        label="Dikstra",
         ## accelerator="Ctrl+N",
-        command=archivo_nuevo_presionado
+        command=crear_ventana
     )
     sub_menu_analizar_algoritmo.add_command(
         label="Algoritmo 2",

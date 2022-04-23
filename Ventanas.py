@@ -1,6 +1,8 @@
 from tkinter import ttk
 
 import networkx as nx
+##import nxneo4j as nx
+from networkx.readwrite import json_graph
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
@@ -137,8 +139,7 @@ class VentanaPrincipal(tk.Tk):
         self.button_Add_node = tk.Button(self.frameAdd_node, text="Agregar")
         self.button_Add_node.grid(row=2, column=1, ipadx=52, pady=5, sticky="w")
 
-        self.frameFigure.grid(row=0, column=1, rowspan=10, columnspan=4, pady=20)
-
+        self.frameFigure.grid(row=0, column=1, rowspan=10, columnspan=4, pady=20, padx=0, ipady=0, ipadx=0)
 
         self.figure = plt.Figure(figsize=(5, 4), dpi=110)
         self.ax = self.figure.add_subplot(111)
@@ -147,7 +148,7 @@ class VentanaPrincipal(tk.Tk):
 
         self.canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
         self.canvas.draw()
-        self.canvas.get_tk_widget().grid()
+        self.canvas.get_tk_widget().grid(pady=0, padx=0, ipady=0, ipadx=0)
 
         self.button_Add_edge.bind("<Button-1>", self.func_agregar_arista)
 
@@ -191,7 +192,6 @@ class VentanaPrincipal(tk.Tk):
         canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
         canvas.get_tk_widget().grid()
 
-
     def func_prueba(self, *args):
         print("probado")
 
@@ -205,7 +205,8 @@ class VentanaPrincipal(tk.Tk):
             self.entry_Add_node.delete(0, tk.END)
 
             print("Nodos:", list(self.G.nodes))
-
+            data1 = json_graph.node_link_data(self.G)
+            print(data1)
 
     def func_agregar_arista(self, *args):
         if not(self.entry_Add_edge_peso.get().isnumeric()):
