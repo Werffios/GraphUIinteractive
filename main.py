@@ -3,8 +3,10 @@
 from Ventanas import *
 
 Ventana = VentanaPrincipal()
+Ventana.focus()
 Ventana.init_menubar()
 Ventana.init_buttons()
+
 
 
 
