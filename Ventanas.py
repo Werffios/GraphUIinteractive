@@ -176,7 +176,8 @@ class VentanaPrincipal(tk.Tk):
         self.button_Delete_node.configure(background="white")
         self.button_Delete_node.grid(row=2, column=1, ipadx=52, pady=5, sticky="w")
 
-
+        self.bind_all('<Control-Key-G>', self.guardar_archivo)
+        self.bind_all('<Control-Key-g>', self.guardar_archivo)
 
         self.button_Add_edge.bind("<Button-1>", self.func_agregar_arista)
 

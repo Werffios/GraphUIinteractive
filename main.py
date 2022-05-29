@@ -5,8 +5,6 @@ Ventana.focus()
 Ventana.init_menubar()
 Ventana.init_buttons()
 
-# Ventana.update()
-
 """# Makes the window topmost
 Ventana.wm_attributes('-topmost', True)
 
