@@ -1,10 +1,14 @@
+import json
 from tkinter import ttk
-from tkinter.filedialog import askopenfile
+from tkinter.filedialog import askopenfile, asksaveasfile
 import networkx as nx
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 from tkinter import messagebox
+
+from networkx import node_link_data
+from networkx.readwrite import json_graph
 
 from menus import *
 
@@ -38,6 +42,8 @@ class VentanaPrincipal(tk.Tk):
         #Inicializar objetos para el "tablero" o donde se hara la figura "Grafo"
         self.frameFigure = ttk.Frame(self)
         self.figure = None
+        #Inicializar url o path del archivo de guardado
+        self.url = None
         ## CONFIGURACION DE VENTANA
         self.geometry("1200x700")
         self.title("Ventana principal")
@@ -243,6 +249,8 @@ class VentanaPrincipal(tk.Tk):
 
     def func_salta_d_p(self, *args):
         self.entry_Add_edge_peso.focus_set()
+    def func_focus_Add_node(self, *args):
+        self.entry_Add_node.focus_set()
 
     def func_prueba(self, *args):
         print("probado")
@@ -257,7 +265,7 @@ class VentanaPrincipal(tk.Tk):
             self.entry_Add_node.delete(0, tk.END)
 
             print("Nodos:", list(self.G.nodes))
-            self.entry_Add_node.focus_set()
+            self.func_focus_Add_node()
 
     def func_agregar_arista(self, *args):
         if not(self.entry_Add_edge_peso.get().isnumeric()):
@@ -280,10 +288,20 @@ class VentanaPrincipal(tk.Tk):
     def archivo_nuevo_presionado(self, *args):
         print("¡Has presionado para crear un nuevo archivo!")
 
+    def guardar_archivo(self, *args):
+        if(self.url==None):
+            self.url = asksaveasfile(filetypes=[('JSON Document', '*.json')], defaultextension=[('JSON Document', '*.json')], initialfile="nuevo_archivo.json")
+        if (self.url != None):
+            with open(self.url.name, "w") as fw:
+                json.dump(node_link_data(self.G), fw)
+            #json.dump(node_link_data(self.G), self.url)
     def abrirarchivo(self, *args):
-        print(askopenfile(title='Please select one (any) frame from your set of images.',
-                          mode='r', filetypes=[('JSON Files', '*.json')]).read())
-
+        ubicacion = (askopenfile(title='Please select one (any) frame from your set of images.',
+                          mode='r', filetypes=[('JSON Files', '*.json')]))
+        with open(ubicacion.name) as f:
+            js_graph = json.load(f)
+        self.G = json_graph.node_link_graph(js_graph)
+        self.func_actualizar_figure()
     def menuarchivo(self, menu, bar_menu):
         sub_menu_archivo_nuevo = tk.Menu(menu, tearoff=False)
         sub_menu_archivo_nuevo.add_command(
@@ -306,12 +324,12 @@ class VentanaPrincipal(tk.Tk):
         menu.add_command(
             label="Guardar",
             ## accelerator="Ctrl+N",
-            command=self.archivo_nuevo_presionado
+            command=self.guardar_archivo
         )
         menu.add_command(
             label="Guardar como",
             ## accelerator="Ctrl+N",
-            command=self.archivo_nuevo_presionado
+            command=self.guardar_archivo
         )
 
         sub_menu_archivo_exportar = tk.Menu(menu, tearoff=False)
