@@ -10,7 +10,7 @@ from tkinter import messagebox
 from networkx import node_link_data
 from networkx.readwrite import json_graph
 
-from menus import *
+from window_start import *
 
 class VentanaPrincipal(tk.Tk):
     def __init__(self, *args, **kwargs):  ## Queda abierto a n argumentos o n argumentos con identificador
@@ -294,7 +294,6 @@ class VentanaPrincipal(tk.Tk):
         if (self.url != None):
             with open(self.url.name, "w") as fw:
                 json.dump(node_link_data(self.G), fw)
-            #json.dump(node_link_data(self.G), self.url)
     def abrirarchivo(self, *args):
         ubicacion = (askopenfile(title='Please select one (any) frame from your set of images.',
                           mode='r', filetypes=[('JSON Files', '*.json')]))
