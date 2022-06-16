@@ -1,4 +1,4 @@
-from Ventanas import *
+from window_main import *
 
 Ventana = VentanaPrincipal()
 Ventana.focus()

@@ -152,7 +152,7 @@ class VentanaPrincipal(tk.Tk):
         self.figure = plt.Figure(figsize=(5, 4), dpi=110)
         self.ax = self.figure.add_subplot(111)
         self.pos = nx.spring_layout(self.G)
-        nx.draw_networkx(self.G, self.pos, ax=self.ax)
+        nx.draw_networkx(self.G, self.pos, ax=self.ax, arrows=True)
 
         self.canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
         self.canvas.draw()
@@ -237,10 +237,10 @@ class VentanaPrincipal(tk.Tk):
         self.figure = plt.Figure(figsize=(5, 4), dpi=110)
         self.ax = self.figure.add_subplot(111)
 
-        self.pos = nx.random_layout(self.G)
+        ##self.pos = nx.random_layout(self.G)
 
-        ##self.pos = nx.spring_layout(self.G)
-        nx.draw_networkx(self.G, self.pos, ax=self.ax)
+        self.pos = nx.spring_layout(self.G)
+        nx.draw_networkx(self.G, self.pos, ax=self.ax, arrows=True)
 
         canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
         canvas.get_tk_widget().grid()
