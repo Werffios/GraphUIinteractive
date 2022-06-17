@@ -1,6 +1,15 @@
 from window_main import *
 
+import sv_ttk
 Ventana = VentanaPrincipal()
+
+# set_theme("light")  # Set light theme
+
+# sv_ttk.use_light_theme()  # Set light theme
+
+sv_ttk.use_dark_theme()  # Set dark theme
+
+
 Ventana.focus()
 Ventana.init_menubar()
 Ventana.init_buttons()
