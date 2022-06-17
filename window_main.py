@@ -55,7 +55,7 @@ class VentanaPrincipal(tk.Tk):
         if(init.var.get()=="Grafo"):
             self.G = nx.Graph()
         elif(init.var.get()=="Grafo Dirigido"):
-            self.G = nx.DiGraph()
+            self.G = nx.DiGraph(directed=True)
         elif (init.var.get() =="Multi Grafo"):
             self.G = nx.MultiGraph()
         elif(init.var.get()=="Multi Grafo Dirigido"):
@@ -69,10 +69,6 @@ class VentanaPrincipal(tk.Tk):
         self.menu_archivo = tk.Menu(self.bar_menu, tearoff=False)  ## Creacion menú archivo
         self.menu_archivo, self.bar_menu = self.menuarchivo(self.menu_archivo, self.bar_menu)  ##Funcion que añade submenus, etc
         self.bar_menu.add_cascade(menu=self.menu_archivo, label="Archivo")  ##Añado a la barra de menus
-
-        self.menu_editar = tk.Menu(self.bar_menu, tearoff=False)  ## Creacion menú editar
-        self.menu_editar, self.bar_menu = self.menueditar(self.menu_editar, self.bar_menu)  ##Funcion que añade submenus, etc
-        self.bar_menu.add_cascade(menu=self.menu_editar, label="Editar")  ##Añado a la barra de menus
 
         self.menu_analizar = tk.Menu(self.bar_menu, tearoff=False)  ## Creacion menú analizar
         self.menu_analizar, self.bar_menu = self.menuanalizar(self.menu_analizar, self.bar_menu)  ##Funcion que añade submenus, etc
@@ -237,10 +233,23 @@ class VentanaPrincipal(tk.Tk):
         self.figure = plt.Figure(figsize=(5, 4), dpi=110)
         self.ax = self.figure.add_subplot(111)
 
-        ##self.pos = nx.random_layout(self.G)
+        # self.pos = nx.random_layout(self.G)
 
         self.pos = nx.spring_layout(self.G)
-        nx.draw_networkx(self.G, self.pos, ax=self.ax, arrows=True)
+        """options = {
+            "font_size": 36,
+            "node_size": 3000,
+            "node_color": "white",
+            "edgecolors": "black",
+            "linewidths": 5,
+            "width": 5,
+        }"""
+        # grafo
+        nx.draw_networkx(self.G, self.pos, ax=self.ax, arrows=True)  # , edge_color="gainsboro"
+
+        #peso
+
+        nx.draw_networkx_edge_labels(self.G, self.pos, nx.get_edge_attributes(self.G, "weight"))
 
         canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
         canvas.get_tk_widget().grid()
@@ -298,23 +307,13 @@ class VentanaPrincipal(tk.Tk):
     def abrirarchivo(self, *args):
         ubicacion = (askopenfile(title='Please select one (any) frame from your set of images.',
                           mode='r', filetypes=[('JSON Files', '*.json')]))
-        with open(ubicacion.name) as f:
-            js_graph = json.load(f)
-        self.G = json_graph.node_link_graph(js_graph)
-        self.func_actualizar_figure()
+        if(ubicacion!=None):
+            with open(ubicacion.name) as f:
+                js_graph = json.load(f)
+            self.G = json_graph.node_link_graph(js_graph)
+            self.func_actualizar_figure()
     def menuarchivo(self, menu, bar_menu):
         sub_menu_archivo_nuevo = tk.Menu(menu, tearoff=False)
-        sub_menu_archivo_nuevo.add_command(
-            label="Personalizado",
-            ## accelerator="Ctrl+N",
-            command=self.archivo_nuevo_presionado
-        )
-        sub_menu_archivo_nuevo.add_command(
-            label="Aleatorio",
-            ## accelerator="Ctrl+N",
-            command=self.archivo_nuevo_presionado
-        )
-        menu.add_cascade(menu=sub_menu_archivo_nuevo, label="Nuevo grafo")
 
         menu.add_command(
             label="Abrir",
@@ -333,6 +332,7 @@ class VentanaPrincipal(tk.Tk):
         )
 
         sub_menu_archivo_exportar = tk.Menu(menu, tearoff=False)
+
         sub_menu_archivo_exportar.add_command(
             label="Excel",
             ## accelerator="Ctrl+N",
@@ -356,59 +356,10 @@ class VentanaPrincipal(tk.Tk):
             command=self.archivo_nuevo_presionado
         )
         menu.add_command(
-            label="Inicio",
-            ## accelerator="Ctrl+N",
-            command=self.archivo_nuevo_presionado
-        )
-        menu.add_command(
             label="Imprimir",
             ## accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
-
-        return (menu, bar_menu)
-
-    def menueditar(self, menu, bar_menu):
-        menu.add_command(
-            label="Deshacer",
-            ## accelerator="Ctrl+N",
-            command=self.archivo_nuevo_presionado
-        )
-        sub_menu_editar_nodo = tk.Menu(menu, tearoff=False)
-        sub_menu_editar_nodo.add_command(
-            label="Agregar",
-            ## accelerator="Ctrl+N",
-            command=self.archivo_nuevo_presionado
-        )
-        sub_menu_editar_nodo.add_command(
-            label="Editar",
-            ## accelerator="Ctrl+N",
-            command=self.archivo_nuevo_presionado
-        )
-        sub_menu_editar_nodo.add_command(
-            label="Eliminar",
-            ## accelerator="Ctrl+N",
-            command=self.archivo_nuevo_presionado
-        )
-        menu.add_cascade(menu=sub_menu_editar_nodo, label="Nodo")
-
-        sub_menu_editar_arco = tk.Menu(menu, tearoff=False)
-        sub_menu_editar_arco.add_command(
-            label="Agregar",
-            ## accelerator="Ctrl+N",
-            command=self.archivo_nuevo_presionado
-        )
-        sub_menu_editar_arco.add_command(
-            label="Editar",
-            ## accelerator="Ctrl+N",
-            command=self.archivo_nuevo_presionado
-        )
-        sub_menu_editar_arco.add_command(
-            label="Eliminar",
-            ## accelerator="Ctrl+N",
-            command=self.archivo_nuevo_presionado
-        )
-        menu.add_cascade(menu=sub_menu_editar_arco, label="Arco")
 
         return (menu, bar_menu)
 
@@ -440,7 +391,7 @@ class VentanaPrincipal(tk.Tk):
 
     def menuherramienta(self, menu, bar_menu):
         menu.add_command(
-            label="Ejecución",
+            label="Ejecuciones",
             ## accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
