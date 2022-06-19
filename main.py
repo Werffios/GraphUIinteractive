@@ -1,14 +1,16 @@
+import darkdetect
 from window_main import *
 
 import sv_ttk
 Ventana = VentanaPrincipal()
-
-# set_theme("light")  # Set light theme
-
-# sv_ttk.use_light_theme()  # Set light theme
-
-sv_ttk.use_dark_theme()  # Set dark theme
-
+ntkutils.placeappincenter(Ventana)
+if darkdetect.theme() == "Dark":
+    sv_ttk.set_theme("dark")
+    ntkutils.dark_title_bar(Ventana)
+    ntkutils.blur_window_background(Ventana)
+else:
+    sv_ttk.set_theme("light")
+    ntkutils.blur_window_background(Ventana) 
 
 Ventana.focus()
 Ventana.init_menubar()

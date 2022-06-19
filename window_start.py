@@ -7,7 +7,15 @@ import sv_ttk
 class MyDialog(tk.simpledialog.Dialog):
 
     def __init__(self, parent, title):
+        self.ok_button = None
+        self.var = None
+        self.choseOption = None
         self.my_option = None
+        self.Title_label = None
+        self.GraphNormal = None
+        self.GraphDirigido = None
+        self.MultiGraph = None
+        self.MultiGraphDir = None
         sv_ttk.use_dark_theme()  # Set dark theme
         super().__init__(parent, title)
 

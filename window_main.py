@@ -1,11 +1,10 @@
 import json
-from tkinter import ttk
 from tkinter.filedialog import askopenfile, asksaveasfile
 import networkx as nx
+import ntkutils
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-from tkinter import messagebox
 
 from networkx import node_link_data
 from networkx.readwrite import json_graph
@@ -13,11 +12,23 @@ from networkx.readwrite import json_graph
 from window_start import *
 
 class VentanaPrincipal(tk.Tk):
-    def __init__(self, *args, **kwargs):  ## Queda abierto a n argumentos o n argumentos con identificador
-        super().__init__(*args, **kwargs)  ## Se almacena por herencia el *args **kwargs
-        white = ttk.Style()
-        white.configure('TFrame', background='#ffffff')
-        ## Inicializar objetos para agregar aristas
+    def __init__(self, *args, **kwargs):  # Queda abierto a n argumentos o n argumentos con identificador
+        super().__init__(*args, **kwargs)  # Se almacena por herencia el *args **kwargs
+        ntkutils.placeappincenter(self)
+        self.iconbitmap(r'icon.ico')
+        init = MyDialog(self, "Selección")
+        print(init.var.get())
+        # Creación del grafo
+        if init.var.get() == "Grafo":
+            self.G = nx.Graph()
+        elif init.var.get() == "Grafo Dirigido":
+            self.G = nx.DiGraph(directed=True)
+        elif init.var.get() == "Multi Grafo":
+            self.G = nx.MultiGraph()
+        elif init.var.get() == "Multi Grafo Dirigido":
+            self.G = nx.MultiDiGraph(directed=True)
+        self.focus_force()
+        # Inicializar objetos para agregar aristas
         self.label_Add_edge_title = None
         self.label_Add_edge_vertice_o = None
         self.label_Add_edge_vertice_d = None
@@ -27,150 +38,111 @@ class VentanaPrincipal(tk.Tk):
         self.entry_Add_edge_peso = None
         self.button_Add_edge = None
         self.frameAdd_edge = ttk.Frame(self, style="TFrame")
-        ## Inicializar objetos para agregar nodos
+        # Inicializar objetos para agregar nodos
         self.label_Add_node_title = None
         self.label_Add_node = None
         self.entry_Add_node = None
         self.button_Add_node = None
         self.frameAdd_node = ttk.Frame(self, style="TFrame")
-        ## Inicializar objetos para eliminar nodos
+        # Inicializar objetos para eliminar nodos
         self.label_Delete_node_title = None
         self.label_Delete_node = None
         self.entry_Delete_node = None
         self.button_Delete_node = None
         self.frameDelete_node = ttk.Frame(self, style="TFrame")
-        #Inicializar objetos para el "tablero" o donde se hara la figura "Grafo"
+        # Inicializar objetos para el "tablero" o donde se creara la figura "Grafo"
         self.frameFigure = ttk.Frame(self)
         self.figure = None
-        #Inicializar url o path del archivo de guardado
+        # Inicializar url o path del archivo de guardado
         self.url = None
-        ## CONFIGURACION DE VENTANA
+        # CONFIGURACIÓN DE VENTANA
         self.geometry("1200x700")
-        self.title("Ventana principal")
-        self.config(bg='#F2B33D')
+        self.title("")
+        # self.config(bg='#F2B33D')                             # <----------------------------------------------->
 
-        init = MyDialog(self, "Seleccion")
-        print(init.var.get())
-        #Creacion del grafo
-        if(init.var.get()=="Grafo"):
-            self.G = nx.Graph()
-        elif(init.var.get()=="Grafo Dirigido"):
-            self.G = nx.DiGraph(directed=True)
-        elif (init.var.get() =="Multi Grafo"):
-            self.G = nx.MultiGraph()
-        elif(init.var.get()=="Multi Grafo Dirigido"):
-            self.G = nx.MultiDiGraph()
-        self.focus_force()
+
     def init_menubar(self):
-        self.bar_menu = tk.Menu()  ## Crear barra de menú
-        self.config(
-            menu=self.bar_menu)  ## Insertar la barra de menús al la principal  (Se deben añadir menus, sino no se ve)
+        self.bar_menu = tk.Menu()  # Crear barra de menú
+        self.config(menu=self.bar_menu) # Definir cuál será la bara de menus (Se deben añadir menus, else no se ve)
 
-        self.menu_archivo = tk.Menu(self.bar_menu, tearoff=False)  ## Creacion menú archivo
-        self.menu_archivo, self.bar_menu = self.menuarchivo(self.menu_archivo, self.bar_menu)  ##Funcion que añade submenus, etc
-        self.bar_menu.add_cascade(menu=self.menu_archivo, label="Archivo")  ##Añado a la barra de menus
+        self.menu_archivo = tk.Menu(self.bar_menu, tearoff=False)  # Creación menú archivo
+        self.menu_archivo, self.bar_menu = self.menuarchivo(self.menu_archivo, self.bar_menu) # Función que añade submenus, etc.
+        self.bar_menu.add_cascade(menu=self.menu_archivo, label="Archivo")  # Añado a la barra de menus
 
-        self.menu_analizar = tk.Menu(self.bar_menu, tearoff=False)  ## Creacion menú analizar
-        self.menu_analizar, self.bar_menu = self.menuanalizar(self.menu_analizar, self.bar_menu)  ##Funcion que añade submenus, etc
-        self.bar_menu.add_cascade(menu=self.menu_analizar, label="Analizar")  ##Añado a la barra de menus
+        self.menu_analizar = tk.Menu(self.bar_menu, tearoff=False)  # Creación menú analizar
+        self.menu_analizar, self.bar_menu = self.menuanalizar(self.menu_analizar, self.bar_menu)  # Función que añade submenus, etc.
+        self.bar_menu.add_cascade(menu=self.menu_analizar, label="Analizar")  # Añado a la barra de menus
 
-        self.menu_herramienta = tk.Menu(self.bar_menu, tearoff=False)  ## Creacion menú herramienta
+        self.menu_herramienta = tk.Menu(self.bar_menu, tearoff=False)  # Creación menú herramienta
         self.menu_herramienta, self.bar_menu = self.menuherramienta(self.menu_herramienta, self.bar_menu)  ##Funcion que añade submenus, etc
-        self.bar_menu.add_cascade(menu=self.menu_herramienta, label="Herramienta")  ##Añado a la barra de menus
+        self.bar_menu.add_cascade(menu=self.menu_herramienta, label="Herramienta")  # Añado a la barra de menus
 
-        self.menu_aplicacion = tk.Menu(self.bar_menu, tearoff=False)  ## Creacion menú aplicacion
+        self.menu_aplicacion = tk.Menu(self.bar_menu, tearoff=False)  # Creación menú aplicación
         self.menu_aplicacion, self.bar_menu = self.menuaplicacion(self.menu_aplicacion, self.bar_menu)  ##Funcion que añade submenus, etc
-        self.bar_menu.add_cascade(menu=self.menu_aplicacion, label="Aplicación")  ##Añado a la barra de menus
+        self.bar_menu.add_cascade(menu=self.menu_aplicacion, label="Aplicación")  # Añado a la barra de menus
 
-        self.menu_ventana = tk.Menu(self.bar_menu, tearoff=False)  ## Creacion menú ventana
+        self.menu_ventana = tk.Menu(self.bar_menu, tearoff=False)  # Creación menú ventana
         self.menu_ventana, self.bar_menu = self.menuventana(self.menu_ventana, self.bar_menu)  ##Funcion que añade submenus, etc
         self.bar_menu.add_cascade(menu=self.menu_ventana, label="Ventana")  ##Añado a la barra de menus
 
-        self.menu_ayuda = tk.Menu(self.bar_menu, tearoff=False)  ## Creacion menú ayuda
+        self.menu_ayuda = tk.Menu(self.bar_menu, tearoff=False)  # Creación menú ayuda
         self.menu_ayuda, self.bar_menu = self.menuayuda(self.menu_ayuda, self.bar_menu)  ##Funcion que añade submenus, etc
         self.bar_menu.add_cascade(menu=self.menu_ayuda, label="Ayuda")  ##Añado a la barra de menus
 
     def init_buttons(self):
         self.frameAdd_edge.grid(row=0, column=0, padx=20, pady=20)
 
-        self.label_Add_edge_title = tk.Label(self.frameAdd_edge, text="AGREGAR ARISTA", font=("Segoe UI", 25))
-        self.label_Add_edge_title.configure(background="white")
-        self.label_Add_edge_title.grid(row=0, columnspan=2, padx=20, pady=5, sticky="e")
+        self.label_Add_edge_title = ttk.Label(self.frameAdd_edge, text="AGREGAR ARISTA", font=("Segoe UI", 25))
+        self.label_Add_edge_title.grid(row=0, columnspan=2, padx=20, pady=5)
 
-        self.label_Add_edge_vertice_o = tk.Label(self.frameAdd_edge, text="Nodo origen", font=("Segoe UI", 11))
-        self.label_Add_edge_vertice_o.configure(background="white")
-        self.label_Add_edge_vertice_o.grid(row=1, column=0, sticky="e")
+        self.label_Add_edge_vertice_o = ttk.Label(self.frameAdd_edge, text="Nodo origen", font=("Segoe UI", 11))
+        self.label_Add_edge_vertice_o.grid(row=1, column=0)
 
-        self.entry_Add_edge_vertice_o = tk.Entry(self.frameAdd_edge, name="entrada origen AggVertice")
-        self.entry_Add_edge_vertice_o.configure(background="white")
-        self.entry_Add_edge_vertice_o.grid(row=1, column=1, sticky="w")
+        self.entry_Add_edge_vertice_o = ttk.Entry(self.frameAdd_edge, name="entrada origen AggVertice")
+        self.entry_Add_edge_vertice_o.grid(row=1, column=1, pady=3)
 
-        self.label_Add_edge_vertice_d = tk.Label(self.frameAdd_edge, text="Nodo destino", font=("Segoe UI", 11))
-        self.label_Add_edge_vertice_d.configure(background="white")
-        self.label_Add_edge_vertice_d.grid(row=2, column=0, sticky="e")
+        self.label_Add_edge_vertice_d = ttk.Label(self.frameAdd_edge, text="Nodo destino", font=("Segoe UI", 11))
+        self.label_Add_edge_vertice_d.grid(row=2, column=0)
 
-        self.entry_Add_edge_vertice_d = tk.Entry(self.frameAdd_edge, name="entrada destino AggVertice")
-        self.entry_Add_edge_vertice_d.configure(background="white")
-        self.entry_Add_edge_vertice_d.grid(row=2, column=1, sticky="w")
+        self.entry_Add_edge_vertice_d = ttk.Entry(self.frameAdd_edge, name="entrada destino AggVertice")
+        self.entry_Add_edge_vertice_d.grid(row=2, column=1, pady=3)
 
-        self.label_Add_edge_peso = tk.Label(self.frameAdd_edge, text="Peso", font=("Segoe UI", 11))
-        self.label_Add_edge_peso.configure(background="white")
-        self.label_Add_edge_peso.grid(row=3, column=0, sticky="e")
+        self.label_Add_edge_peso = ttk.Label(self.frameAdd_edge, text="Peso", font=("Segoe UI", 11))
+        self.label_Add_edge_peso.grid(row=3, column=0)
 
-        self.entry_Add_edge_peso = tk.Entry(self.frameAdd_edge, name="entrada peso AggVertice")
-        self.entry_Add_edge_peso.configure(background="white")
-        self.entry_Add_edge_peso.grid(row=3, column=1, sticky="w")
+        self.entry_Add_edge_peso = ttk.Entry(self.frameAdd_edge, name="entrada peso AggVertice")
+        self.entry_Add_edge_peso.grid(row=3, column=1, pady=3)
 
-        self.button_Add_edge = tk.Button(self.frameAdd_edge, text="Agregar")
-        self.button_Add_edge.configure(background="white")
-        self.button_Add_edge.grid(row=4, column=1, ipadx=52, pady=5, sticky="w")
+        self.button_Add_edge = ttk.Button(self.frameAdd_edge, text="Agregar")
+        self.button_Add_edge.grid(row=4, column=1, ipadx=52, pady=5)
 
         self.frameAdd_node.grid(row=1, column=0, ipadx=1)
 
-        self.label_Add_node_title = tk.Label(self.frameAdd_node, text="AGREGAR NODO", font=("Segoe UI", 25))
-        self.label_Add_node_title.configure(background="white")
-        self.label_Add_node_title.grid(row=0, columnspan=2, padx=20, pady=5, sticky="e")
+        self.label_Add_node_title = ttk.Label(self.frameAdd_node, text="AGREGAR NODO", font=("Segoe UI", 25))
+        self.label_Add_node_title.grid(row=0, columnspan=2, padx=20, pady=5)
 
-        self.label_Add_node = tk.Label(self.frameAdd_node, text="Nombre nodo", font=("Segoe UI", 11))
-        self.label_Add_node.configure(background="white")
-        self.label_Add_node.grid(row=1, column=0, sticky="e")
+        self.label_Add_node = ttk.Label(self.frameAdd_node, text="Nombre nodo", font=("Segoe UI", 11))
+        self.label_Add_node.grid(row=1, column=0)
 
-        self.entry_Add_node = tk.Entry(self.frameAdd_node, name="entrada nodo sin conexion")
-        self.entry_Add_node.configure(background="white")
-        self.entry_Add_node.grid(row=1, column=1, sticky="w")
+        self.entry_Add_node = ttk.Entry(self.frameAdd_node, name="entrada nodo sin conexion")
+        self.entry_Add_node.grid(row=1, column=1, pady=3)
 
-        self.button_Add_node = tk.Button(self.frameAdd_node, text="Agregar")
-        self.button_Add_node.configure(background="white")
-        self.button_Add_node.grid(row=2, column=1, ipadx=52, pady=5, sticky="w")
+        self.button_Add_node = ttk.Button(self.frameAdd_node, text="Agregar")
+        self.button_Add_node.grid(row=2, column=1, ipadx=52, pady=5)
 
-        self.frameFigure.grid(row=0, column=1, rowspan=4, pady=20, padx=0, ipady=0, ipadx=0)
+        self.frameFigure.grid(row=0, column=1, rowspan=4, pady=20)
 
-        self.figure = plt.Figure(figsize=(5, 4), dpi=110)
-        self.ax = self.figure.add_subplot(111)
-        self.pos = nx.spring_layout(self.G)
-        nx.draw_networkx(self.G, self.pos, ax=self.ax, arrows=True)
+        self.label_Delete_node_title = ttk.Label(self.frameDelete_node, text="ELIMINAR NODO", font=("Segoe UI", 25))
+        self.label_Delete_node_title.grid(row=0, columnspan=2, padx=20, pady=5)
 
-        self.canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
-        self.canvas.draw()
-        self.canvas.get_tk_widget().grid(pady=0, padx=0, ipady=0, ipadx=0)
+        self.label_Delete_node = ttk.Label(self.frameDelete_node, text="Nombre nodo", font=("Segoe UI", 11))
+        self.label_Delete_node.grid(row=1, column=0)
 
-        self.frameDelete_node.grid(row=2, column=0)
+        self.entry_Delete_node = ttk.Entry(self.frameDelete_node, name="entrada nodo a borrar")
+        self.entry_Delete_node.grid(row=1, column=1, pady=3)
 
-        self.label_Delete_node_title = tk.Label(self.frameDelete_node, text="ELIMINAR NODO", font=("Segoe UI", 25))
-        self.label_Delete_node_title.configure(background="white")
-        self.label_Delete_node_title.grid(row=0, columnspan=2, padx=20, pady=5, sticky="e")
-
-        self.label_Delete_node = tk.Label(self.frameDelete_node, text="Nombre nodo", font=("Segoe UI", 11))
-        self.label_Delete_node.configure(background="white")
-        self.label_Delete_node.grid(row=1, column=0, sticky="e")
-
-        self.entry_Delete_node = tk.Entry(self.frameDelete_node, name="entrada nodo a borrar")
-        self.entry_Delete_node.configure(background="white")
-        self.entry_Delete_node.grid(row=1, column=1, sticky="w")
-
-        self.button_Delete_node = tk.Button(self.frameDelete_node, text="Eliminar")
-        self.button_Delete_node.configure(background="white")
-        self.button_Delete_node.grid(row=2, column=1, ipadx=52, pady=5, sticky="w")
+        self.button_Delete_node = ttk.Button(self.frameDelete_node, text="Eliminar")
+        self.button_Delete_node.grid(row=2, column=1, ipadx=52, pady=5)
 
         self.bind_all('<Control-Key-G>', self.guardar_archivo)
         self.bind_all('<Control-Key-g>', self.guardar_archivo)
@@ -192,19 +164,10 @@ class VentanaPrincipal(tk.Tk):
         self.entry_Delete_node.bind("<Return>", self.func_eliminar_nodo)
         self.button_Delete_node.bind("<Button-1>", self.func_eliminar_nodo)
 
+        self.frameDelete_node.grid(row=2, column=0)
 
-        """G = nx.complete_graph(8)
-        nx.draw(G)
+        self.func_actualizar_figure()
 
-        f = plt.Figure(figsize=(5, 5), dpi=100)
-        a = f.add_subplot(111)
-        pos = nx.spring_layout(G)
-        nx.draw(G, pos, ax=a)
-        ######################
-
-        # a tk.DrawingArea
-        canvas = FigureCanvasTkAgg(f, master=self)
-        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)"""
     def func_eliminar_nodo(self, *args):
         self.label_error_delete.config(text="ERROR--> No existe el nodo: " + self.entry_Delete_node.get(), bg='#fff', fg='#f00')
         self.label_error_delete.grid_forget()
@@ -222,37 +185,27 @@ class VentanaPrincipal(tk.Tk):
             else:
                 self.label_error_delete.grid(row=3, column=0, columnspan=2)
                 self.entry_Delete_node.focus_set()
-    def func_actualizar_figure(self, *args):
 
+    def func_actualizar_figure(self, *args):
         self.frameFigure.grid_remove()
         self.frameFigure.grid_forget()
 
         self.frameFigure = ttk.Frame(self)
-        self.frameFigure.grid(row=0, column=1, rowspan=10, columnspan=4, pady=20)
+        self.frameFigure.grid(row=0, column=1, rowspan=4, pady=20)
 
-        self.figure = plt.Figure(figsize=(5, 4), dpi=110)
-        self.ax = self.figure.add_subplot(111)
 
-        # self.pos = nx.random_layout(self.G)
+        self.figure = plt.figure(frameon=True, figsize=(7, 5), dpi=100)
+        self.canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
 
-        self.pos = nx.spring_layout(self.G)
-        """options = {
-            "font_size": 36,
-            "node_size": 3000,
-            "node_color": "white",
-            "edgecolors": "black",
-            "linewidths": 5,
-            "width": 5,
-        }"""
-        # grafo
-        nx.draw_networkx(self.G, self.pos, ax=self.ax, arrows=True)  # , edge_color="gainsboro"
+        plt.gca().set_facecolor("grey")
 
-        #peso
+        pos = nx.spring_layout(self.G, 25)
+        nx.draw_networkx(self.G, pos=pos, alpha=1)
+        nx.draw_networkx_edge_labels(self.G, pos, nx.get_edge_attributes(self.G, "weight"))
 
-        nx.draw_networkx_edge_labels(self.G, self.pos, nx.get_edge_attributes(self.G, "weight"))
+        self.canvas.draw()
+        self.canvas.get_tk_widget().pack()
 
-        canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
-        canvas.get_tk_widget().grid()
 
     def func_salta_o_d(self, *args):
         self.entry_Add_edge_vertice_d.focus_set()
@@ -298,6 +251,12 @@ class VentanaPrincipal(tk.Tk):
     def archivo_nuevo_presionado(self, *args):
         print("¡Has presionado para crear un nuevo archivo!")
 
+    def exportar_imagen(self, *args):
+        # grafo
+        nx.draw_networkx(self.G, self.pos, ax=self.ax, arrows=True)  # , edge_color="gainsboro"
+        plt.savefig("Graph.png", format="PNG")
+        print("¡Has presionado para exportar un archivo!")
+
     def guardar_archivo(self, *args):
         if(self.url==None):
             self.url = asksaveasfile(filetypes=[('JSON Document', '*.json')], defaultextension=[('JSON Document', '*.json')], initialfile="nuevo_archivo.json")
@@ -317,17 +276,17 @@ class VentanaPrincipal(tk.Tk):
 
         menu.add_command(
             label="Abrir",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=self.abrirarchivo
         )
         menu.add_command(
             label="Guardar",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=self.guardar_archivo
         )
         menu.add_command(
             label="Guardar como",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=self.guardar_archivo
         )
 
@@ -335,29 +294,29 @@ class VentanaPrincipal(tk.Tk):
 
         sub_menu_archivo_exportar.add_command(
             label="Excel",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
         sub_menu_archivo_exportar.add_command(
             label="Imagen",
-            ## accelerator="Ctrl+N",
-            command=self.archivo_nuevo_presionado
+            # accelerator="Ctrl+N",
+            command=self.exportar_imagen
         )
         sub_menu_archivo_exportar.add_command(
             label="PDF",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
         menu.add_cascade(menu=sub_menu_archivo_exportar, label="Exportar")
 
         menu.add_command(
             label="Importar datos",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
         menu.add_command(
             label="Imprimir",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
 
@@ -367,22 +326,22 @@ class VentanaPrincipal(tk.Tk):
         sub_menu_analizar_algoritmo = tk.Menu(menu, tearoff=False)
         sub_menu_analizar_algoritmo.add_command(
             label="Dikstra",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=lambda: abrir_ventana_dijkstra(self)
         )
         sub_menu_analizar_algoritmo.add_command(
             label="Algoritmo 2",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
         sub_menu_analizar_algoritmo.add_command(
             label="Algoritmo 3",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
         sub_menu_analizar_algoritmo.add_command(
             label="Algoritmo k",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
         menu.add_cascade(menu=sub_menu_analizar_algoritmo, label="Algoritmo")
@@ -392,7 +351,7 @@ class VentanaPrincipal(tk.Tk):
     def menuherramienta(self, menu, bar_menu):
         menu.add_command(
             label="Ejecuciones",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
         return (menu, bar_menu)
@@ -401,37 +360,37 @@ class VentanaPrincipal(tk.Tk):
         sub_menu_aplicacion = tk.Menu(menu, tearoff=False)
         sub_menu_aplicacion.add_command(
             label="Aplicación 1",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
         sub_menu_aplicacion.add_command(
             label="Aplicación 2",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
         sub_menu_aplicacion.add_command(
             label="Aplicación 3",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
         sub_menu_aplicacion.add_command(
             label="Aplicación m",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
-        menu.add_cascade(menu=sub_menu_aplicacion, label="Algoritmo")
+        menu.add_cascade(menu=sub_menu_aplicacion, label="Aplicación")
 
         return (menu, bar_menu)
 
     def menuventana(self, menu, bar_menu):
         menu.add_command(
             label="Gráfica",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
         menu.add_command(
             label="Tabla",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
         return (menu, bar_menu)
@@ -439,12 +398,12 @@ class VentanaPrincipal(tk.Tk):
     def menuayuda(self, menu, bar_menu):
         menu.add_command(
             label="Ayuda",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
         menu.add_command(
             label="Acerca de Grafos",
-            ## accelerator="Ctrl+N",
+            # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
         return (menu, bar_menu)
@@ -454,8 +413,8 @@ class ventanadikstra(tk.Toplevel):
     # secundaria está en uso.
     en_uso = False
 
-    def __init__(self, *args, **kwargs):  ## Queda abierto a n argumentos o n argumentos con identificador
-        super().__init__(*args, **kwargs)  ## Se almacena por herencia el *args **kwargs
+    def __init__(self, *args, **kwargs):  # Queda abierto a n argumentos o n argumentos con identificador
+        super().__init__(*args, **kwargs)  # Se almacena por herencia el *args **kwargs
 
         self.frameDijkstra = tk.Frame(self)
         self.geometry("800x400")
@@ -465,19 +424,19 @@ class ventanadikstra(tk.Toplevel):
         self.frameDijkstra.grid(row=0, column=0, padx=20, pady=20, ipady=20)
 
         self.labelTitleDikstra = tk.Label(self.frameDijkstra, text="ALG-DIJKSTRA", font=("Segoe UI", 25))
-        self.labelTitleDikstra.grid(row=0, column=0, columnspan=2, padx=20, pady=5, sticky="e")
+        self.labelTitleDikstra.grid(row=0, column=0, columnspan=2, padx=20, pady=5)
 
-        self.labelorigen = tk.Label(self.frameDijkstra, text="NodoOrigen", font=("Segoe UI", 11))
-        self.labelorigen.grid(row=1, column=0, sticky="e")
+        self.labelorigen = tk.Label(self.frameDijkstra, text="Nodo Origen", font=("Segoe UI", 11))
+        self.labelorigen.grid(row=1, column=0)
 
         self.entryOrigen = tk.Entry(self.frameDijkstra, name="entryNodoOrigen")
-        self.entryOrigen.grid(row=1, column=1, sticky="w")
+        self.entryOrigen.grid(row=1, column=1, pady=10)
 
-        self.labeldestino = tk.Label(self.frameDijkstra, text="Nododestino", font=("Segoe UI", 11))
-        self.labeldestino.grid(row=2, column=0, sticky="e")
+        self.labeldestino = tk.Label(self.frameDijkstra, text="Nodo destino", font=("Segoe UI", 11))
+        self.labeldestino.grid(row=2, column=0)
 
         self.entryDestino = tk.Entry(self.frameDijkstra, name="entryNodoDestino")
-        self.entryDestino.grid(row=2, column=1, sticky="w")
+        self.entryDestino.grid(row=2, column=1, pady=10)
 
 
     def destroy(self):
