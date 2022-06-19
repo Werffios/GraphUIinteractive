@@ -5,11 +5,11 @@ import ntkutils
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-
 from networkx import node_link_data
 from networkx.readwrite import json_graph
 
 from window_start import *
+
 
 class VentanaPrincipal(tk.Tk):
     def __init__(self, *args, **kwargs):  # Queda abierto a n argumentos o n argumentos con identificador
@@ -54,39 +54,47 @@ class VentanaPrincipal(tk.Tk):
         self.frameFigure = ttk.Frame(self)
         self.figure = None
         # Inicializar url o path del archivo de guardado
-        self.url = None
+        self.urlGraph = None
+        self.urlPNG = None
+        self.urlPDF = None
+        self.urlCSV = None
         # CONFIGURACIÓN DE VENTANA
         self.geometry("1200x700")
         self.title("")
         # self.config(bg='#F2B33D')                             # <----------------------------------------------->
 
-
     def init_menubar(self):
         self.bar_menu = tk.Menu()  # Crear barra de menú
-        self.config(menu=self.bar_menu) # Definir cuál será la bara de menus (Se deben añadir menus, else no se ve)
+        self.config(menu=self.bar_menu)  # Definir cuál será la bara de menus (Se deben añadir menus, else no se ve)
 
         self.menu_archivo = tk.Menu(self.bar_menu, tearoff=False)  # Creación menú archivo
-        self.menu_archivo, self.bar_menu = self.menuarchivo(self.menu_archivo, self.bar_menu) # Función que añade submenus, etc.
+        self.menu_archivo, self.bar_menu = self.menuarchivo(self.menu_archivo,
+                                                            self.bar_menu)  # Función que añade submenus, etc.
         self.bar_menu.add_cascade(menu=self.menu_archivo, label="Archivo")  # Añado a la barra de menus
 
         self.menu_analizar = tk.Menu(self.bar_menu, tearoff=False)  # Creación menú analizar
-        self.menu_analizar, self.bar_menu = self.menuanalizar(self.menu_analizar, self.bar_menu)  # Función que añade submenus, etc.
+        self.menu_analizar, self.bar_menu = self.menuanalizar(self.menu_analizar,
+                                                              self.bar_menu)  # Función que añade submenus, etc.
         self.bar_menu.add_cascade(menu=self.menu_analizar, label="Analizar")  # Añado a la barra de menus
 
         self.menu_herramienta = tk.Menu(self.bar_menu, tearoff=False)  # Creación menú herramienta
-        self.menu_herramienta, self.bar_menu = self.menuherramienta(self.menu_herramienta, self.bar_menu)  ##Funcion que añade submenus, etc
+        self.menu_herramienta, self.bar_menu = self.menuherramienta(self.menu_herramienta,
+                                                                    self.bar_menu)  ##Funcion que añade submenus, etc
         self.bar_menu.add_cascade(menu=self.menu_herramienta, label="Herramienta")  # Añado a la barra de menus
 
         self.menu_aplicacion = tk.Menu(self.bar_menu, tearoff=False)  # Creación menú aplicación
-        self.menu_aplicacion, self.bar_menu = self.menuaplicacion(self.menu_aplicacion, self.bar_menu)  ##Funcion que añade submenus, etc
+        self.menu_aplicacion, self.bar_menu = self.menuaplicacion(self.menu_aplicacion,
+                                                                  self.bar_menu)  ##Funcion que añade submenus, etc
         self.bar_menu.add_cascade(menu=self.menu_aplicacion, label="Aplicación")  # Añado a la barra de menus
 
         self.menu_ventana = tk.Menu(self.bar_menu, tearoff=False)  # Creación menú ventana
-        self.menu_ventana, self.bar_menu = self.menuventana(self.menu_ventana, self.bar_menu)  ##Funcion que añade submenus, etc
+        self.menu_ventana, self.bar_menu = self.menuventana(self.menu_ventana,
+                                                            self.bar_menu)  ##Funcion que añade submenus, etc
         self.bar_menu.add_cascade(menu=self.menu_ventana, label="Ventana")  ##Añado a la barra de menus
 
         self.menu_ayuda = tk.Menu(self.bar_menu, tearoff=False)  # Creación menú ayuda
-        self.menu_ayuda, self.bar_menu = self.menuayuda(self.menu_ayuda, self.bar_menu)  ##Funcion que añade submenus, etc
+        self.menu_ayuda, self.bar_menu = self.menuayuda(self.menu_ayuda,
+                                                        self.bar_menu)  ##Funcion que añade submenus, etc
         self.bar_menu.add_cascade(menu=self.menu_ayuda, label="Ayuda")  ##Añado a la barra de menus
 
     def init_buttons(self):
@@ -157,9 +165,7 @@ class VentanaPrincipal(tk.Tk):
         self.entry_Add_edge_vertice_d.bind("<Return>", self.func_salta_d_p)
         self.entry_Add_edge_peso.bind("<Return>", self.func_agregar_arista)
 
-
         self.label_error_delete = tk.Label(self.frameDelete_node, font=("Segoe UI", 9))
-
 
         self.entry_Delete_node.bind("<Return>", self.func_eliminar_nodo)
         self.button_Delete_node.bind("<Button-1>", self.func_eliminar_nodo)
@@ -169,10 +175,11 @@ class VentanaPrincipal(tk.Tk):
         self.func_actualizar_figure()
 
     def func_eliminar_nodo(self, *args):
-        self.label_error_delete.config(text="ERROR--> No existe el nodo: " + self.entry_Delete_node.get(), bg='#fff', fg='#f00')
+        self.label_error_delete.config(text="ERROR--> No existe el nodo: " + self.entry_Delete_node.get(), bg='#fff',
+                                       fg='#f00')
         self.label_error_delete.grid_forget()
         if (self.entry_Delete_node.get() != ''):
-            if(self.G.has_node(self.entry_Delete_node.get())):
+            if (self.G.has_node(self.entry_Delete_node.get())):
                 self.G.remove_node(self.entry_Delete_node.get())
 
                 self.func_actualizar_figure()
@@ -193,25 +200,25 @@ class VentanaPrincipal(tk.Tk):
         self.frameFigure = ttk.Frame(self)
         self.frameFigure.grid(row=0, column=1, rowspan=4, pady=20)
 
-
         self.figure = plt.figure(frameon=True, figsize=(7, 5), dpi=100)
-        self.canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
+        canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
 
-        plt.gca().set_facecolor("grey")
+        self.figure.set_facecolor('#eafff5')
+        plt.axis('off')
 
         pos = nx.spring_layout(self.G, 25)
         nx.draw_networkx(self.G, pos=pos, alpha=1)
         nx.draw_networkx_edge_labels(self.G, pos, nx.get_edge_attributes(self.G, "weight"))
 
-        self.canvas.draw()
-        self.canvas.get_tk_widget().pack()
-
+        canvas.draw()
+        canvas.get_tk_widget().pack()
 
     def func_salta_o_d(self, *args):
         self.entry_Add_edge_vertice_d.focus_set()
 
     def func_salta_d_p(self, *args):
         self.entry_Add_edge_peso.focus_set()
+
     def func_focus_Add_node(self, *args):
         self.entry_Add_node.focus_set()
 
@@ -219,8 +226,7 @@ class VentanaPrincipal(tk.Tk):
         print("probado")
 
     def func_agregar_nodo(self, *args):
-        if(self.entry_Add_node.get()!=''):
-
+        if (self.entry_Add_node.get() != ''):
             self.G.add_node(self.entry_Add_node.get())
 
             self.func_actualizar_figure()
@@ -231,11 +237,13 @@ class VentanaPrincipal(tk.Tk):
             self.func_focus_Add_node()
 
     def func_agregar_arista(self, *args):
-        if not(self.entry_Add_edge_peso.get().isnumeric()):
+        if not (self.entry_Add_edge_peso.get().isnumeric()):
             self.entry_Add_edge_peso.delete(0, tk.END)
 
-        elif (self.entry_Add_edge_vertice_o.get() != '') and (self.entry_Add_edge_peso.get() != '') and (self.entry_Add_edge_vertice_d.get() != ''):
-            self.G.add_edge(self.entry_Add_edge_vertice_o.get(), self.entry_Add_edge_vertice_d.get(), weight=int(self.entry_Add_edge_peso.get()))
+        elif (self.entry_Add_edge_vertice_o.get() != '') and (self.entry_Add_edge_peso.get() != '') and (
+                self.entry_Add_edge_vertice_d.get() != ''):
+            self.G.add_edge(self.entry_Add_edge_vertice_o.get(), self.entry_Add_edge_vertice_d.get(),
+                            weight=int(self.entry_Add_edge_peso.get()))
 
             self.func_actualizar_figure()
 
@@ -246,31 +254,45 @@ class VentanaPrincipal(tk.Tk):
             self.entry_Add_edge_vertice_o.focus_set()
             print("Edges:", list(self.G.edges))
 
-
-
     def archivo_nuevo_presionado(self, *args):
         print("¡Has presionado para crear un nuevo archivo!")
 
+    def exportar_PDF(self, *args):
+        if (self.urlPDF == None):
+            self.urlPDF = asksaveasfile(filetypes=[('PDF', '*.pdf')],
+                                        defaultextension=[('PDF', '*.pdf')],
+                                        initialfile="grafo_en_pdf.pdf")
+        if (self.urlPDF != None):
+            print("PDF guardado en:", str(self.urlPDF.name))
+            plt.savefig(str(self.urlPDF.name), format="PDF")
+
     def exportar_imagen(self, *args):
-        # grafo
-        nx.draw_networkx(self.G, self.pos, ax=self.ax, arrows=True)  # , edge_color="gainsboro"
-        plt.savefig("Graph.png", format="PNG")
-        print("¡Has presionado para exportar un archivo!")
+        if (self.urlPNG == None):
+            self.urlPNG = asksaveasfile(filetypes=[('PNG', '*.png')],
+                                        defaultextension=[('PNG', '*.png')],
+                                        initialfile="grafo_en_png.png")
+        if (self.urlPNG != None):
+            print("Imagen guardada en:", str(self.urlPNG.name))
+            plt.savefig(str(self.urlPNG.name), format="PNG")
 
     def guardar_archivo(self, *args):
-        if(self.url==None):
-            self.url = asksaveasfile(filetypes=[('JSON Document', '*.json')], defaultextension=[('JSON Document', '*.json')], initialfile="nuevo_archivo.json")
-        if (self.url != None):
-            with open(self.url.name, "w") as fw:
+        if (self.urlGraph == None):
+            self.urlGraph = asksaveasfile(filetypes=[('JSON Document', '*.json')],
+                                          defaultextension=[('JSON Document', '*.json')],
+                                          initialfile="nuevo_archivo.json")
+        if (self.urlGraph != None):
+            with open(self.urlGraph.name, "w") as fw:
                 json.dump(node_link_data(self.G), fw)
+
     def abrirarchivo(self, *args):
         ubicacion = (askopenfile(title='Please select one (any) frame from your set of images.',
-                          mode='r', filetypes=[('JSON Files', '*.json')]))
-        if(ubicacion!=None):
+                                 mode='r', filetypes=[('JSON Files', '*.json')]))
+        if (ubicacion != None):
             with open(ubicacion.name) as f:
                 js_graph = json.load(f)
             self.G = json_graph.node_link_graph(js_graph)
             self.func_actualizar_figure()
+
     def menuarchivo(self, menu, bar_menu):
         sub_menu_archivo_nuevo = tk.Menu(menu, tearoff=False)
 
@@ -305,7 +327,7 @@ class VentanaPrincipal(tk.Tk):
         sub_menu_archivo_exportar.add_command(
             label="PDF",
             # accelerator="Ctrl+N",
-            command=self.archivo_nuevo_presionado
+            command=self.exportar_PDF
         )
         menu.add_cascade(menu=sub_menu_archivo_exportar, label="Exportar")
 
@@ -408,6 +430,7 @@ class VentanaPrincipal(tk.Tk):
         )
         return (menu, bar_menu)
 
+
 class ventanadikstra(tk.Toplevel):
     # Atributo de la clase que indica si la ventana
     # secundaria está en uso.
@@ -438,14 +461,12 @@ class ventanadikstra(tk.Toplevel):
         self.entryDestino = tk.Entry(self.frameDijkstra, name="entryNodoDestino")
         self.entryDestino.grid(row=2, column=1, pady=10)
 
-
     def destroy(self):
         # Restablecer el atributo al cerrarse.
         self.__class__.en_uso = False
         return super().destroy()
 
 
-
 def abrir_ventana_dijkstra(self):
-        if not ventanadikstra.en_uso:
-            self.ventana_secundaria = ventanadikstra()
+    if not ventanadikstra.en_uso:
+        self.ventana_secundaria = ventanadikstra()
