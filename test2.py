@@ -1,17 +1,9 @@
-import psutil
-import tkinter as tk
-from tkinter import *
 import networkx as nx
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import (
-    FigureCanvasTkAgg
-)
+import pandas as pd
+import json
 
-root = Tk()
-root.title("Hello")
+from networkx.readwrite import json_graph
 
-fig = plt.figure(frameon=True, figsize=(5, 1), dpi=100)
-canvas = FigureCanvasTkAgg(fig, root)
 Node = nx.Graph()
 
 Node.add_edge("a", "b", weight=0.6)
@@ -21,15 +13,42 @@ Node.add_edge("c", "e", weight=0.7)
 Node.add_edge("c", "f", weight=0.9)
 Node.add_edge("a", "d", weight=0.3)
 
-plt.gca().set_facecolor("grey")
-fig.set_facecolor("black")
-pos = nx.spring_layout(Node, 25)
-nx.draw_networkx(Node, pos=pos, alpha=1,
-                 with_labels=False, node_size=100, node_color="green")
-nx.draw_networkx_edge_labels(Node, pos, nx.get_edge_attributes(Node, "weight") )
+s1 = json.dumps(json_graph.node_link_data(Node))
 
-canvas.draw()
-canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=True)
+json = json.loads(s1)
 
+with open('test_csv.csv', 'w') as f:
+    for key in json.keys():
+        f.write(key + "," + str(json[key]) + "\n")
+    f.close()
 
-root.mainloop()
+graph_import = {}
+with open('test_csv.csv', 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        line = line.strip()
+        print(line[line.index(',') + 1:])
+        if line[line.index(',') + 1:] == 'False':
+            graph_import[line[:line.index(',')]] = False
+        elif line[line.index(',') + 1:] == 'True':
+            graph_import[line[:line.index(',')]] = True
+        elif line[line.index(',') + 1:] == '{}':
+            graph_import[line[:line.index(',')]] = {}
+        else:
+            if line[:line.index(',')] not in graph_import:
+                graph_import[line[:line.index(',')]] = list()
+            if line[:line.index(',')] == 'nodes':
+                for data in line[line.index(',') + 1:].split(','):
+                    graph_import[line[:line.index(',')]].append({data.split("'")[1]: data.split("'")[3]})
+            else:
+                for data in line[line.index(',') + 1:].replace("}, {", "}|{").split("|"):
+                    temp = data.split("'")
+                    graph_import[line[:line.index(',')]].append(
+                        {temp[1]: float(temp[2].replace(':', '').replace(',', '')), temp[3]: temp[5], temp[7]: temp[9]})
+    f.close()
+
+print(json_graph.node_link_data(Node))
+print(graph_import)
+
+G = json_graph.node_link_graph(graph_import)
+print(G.nodes())

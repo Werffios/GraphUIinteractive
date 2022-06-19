@@ -57,7 +57,8 @@ class VentanaPrincipal(tk.Tk):
         self.urlGraph = None
         self.urlPNG = None
         self.urlPDF = None
-        self.urlCSV = None
+        self.urlCSV_export = None
+        self.urlCSV_import = None
         # CONFIGURACIÓN DE VENTANA
         self.geometry("1200x700")
         self.title("")
@@ -165,7 +166,7 @@ class VentanaPrincipal(tk.Tk):
         self.entry_Add_edge_vertice_d.bind("<Return>", self.func_salta_d_p)
         self.entry_Add_edge_peso.bind("<Return>", self.func_agregar_arista)
 
-        self.label_error_delete = tk.Label(self.frameDelete_node, font=("Segoe UI", 9))
+        self.label_error_delete = ttk.Label(self.frameDelete_node, font=("Segoe UI", 9))
 
         self.entry_Delete_node.bind("<Return>", self.func_eliminar_nodo)
         self.button_Delete_node.bind("<Button-1>", self.func_eliminar_nodo)
@@ -173,25 +174,6 @@ class VentanaPrincipal(tk.Tk):
         self.frameDelete_node.grid(row=2, column=0)
 
         self.func_actualizar_figure()
-
-    def func_eliminar_nodo(self, *args):
-        self.label_error_delete.config(text="ERROR--> No existe el nodo: " + self.entry_Delete_node.get(), bg='#fff',
-                                       fg='#f00')
-        self.label_error_delete.grid_forget()
-        if (self.entry_Delete_node.get() != ''):
-            if (self.G.has_node(self.entry_Delete_node.get())):
-                self.G.remove_node(self.entry_Delete_node.get())
-
-                self.func_actualizar_figure()
-
-                self.entry_Delete_node.delete(0, tk.END)
-
-                print("Nodos:", list(self.G.nodes))
-                self.entry_Delete_node.focus_set()
-
-            else:
-                self.label_error_delete.grid(row=3, column=0, columnspan=2)
-                self.entry_Delete_node.focus_set()
 
     def func_actualizar_figure(self, *args):
         self.frameFigure.grid_remove()
@@ -207,20 +189,36 @@ class VentanaPrincipal(tk.Tk):
         plt.axis('off')
 
         pos = nx.spring_layout(self.G, 25)
-        nx.draw_networkx(self.G, pos=pos, alpha=1)
+        nx.draw_networkx(self.G, pos=pos, alpha=0.9, node_color='#44e011', edge_color='#bb85f0')
         nx.draw_networkx_edge_labels(self.G, pos, nx.get_edge_attributes(self.G, "weight"))
 
         canvas.draw()
         canvas.get_tk_widget().pack()
 
+    def func_eliminar_nodo(self, *args):
+        self.label_error_delete.config(text="ERROR--> No existe el nodo: " + self.entry_Delete_node.get())
+        self.label_error_delete.grid_forget()
+        if (self.entry_Delete_node.get() != ''):
+            if (self.G.has_node(self.entry_Delete_node.get())):
+                self.G.remove_node(self.entry_Delete_node.get())
+                self.func_actualizar_figure()
+                self.entry_Add_node.focus_set()
+                self.entry_Delete_node.delete(0, tk.END)
+                self.entry_Delete_node.focus_set()
+
+                print("Nodos:", list(self.G.nodes))
+
+            else:
+                self.label_error_delete.grid(row=3, column=0, columnspan=2)
+                self.entry_Delete_node.focus_set()
+
     def func_salta_o_d(self, *args):
-        self.entry_Add_edge_vertice_d.focus_set()
+        if (self.entry_Add_edge_vertice_o.get() != ''):
+            self.entry_Add_edge_vertice_d.focus_set()
 
     def func_salta_d_p(self, *args):
-        self.entry_Add_edge_peso.focus_set()
-
-    def func_focus_Add_node(self, *args):
-        self.entry_Add_node.focus_set()
+        if (self.entry_Add_edge_vertice_d.get() != ''):
+            self.entry_Add_edge_peso.focus_set()
 
     def func_prueba(self, *args):
         print("probado")
@@ -234,7 +232,8 @@ class VentanaPrincipal(tk.Tk):
             self.entry_Add_node.delete(0, tk.END)
 
             print("Nodos:", list(self.G.nodes))
-            self.func_focus_Add_node()
+            self.entry_Delete_node.focus_set()
+            self.entry_Add_node.focus_set()
 
     def func_agregar_arista(self, *args):
         if not (self.entry_Add_edge_peso.get().isnumeric()):
@@ -256,6 +255,51 @@ class VentanaPrincipal(tk.Tk):
 
     def archivo_nuevo_presionado(self, *args):
         print("¡Has presionado para crear un nuevo archivo!")
+    def exportar_CSV(self, *args):
+        if(self.urlCSV_export == None):
+            self.urlCSV_export = asksaveasfile(filetypes=[('CSV', '*.csv')],
+                                               defaultextension=[('CSV', '*.csv')],
+                                               initialfile="grafo_en_csv.csv")
+        if (self.urlCSV_export != None):
+            json_archivo = json.loads(json.dumps(json_graph.node_link_data(self.G)))
+            print("PDF guardado en:", str(self.urlCSV_export.name))
+            with open(self.urlCSV_export.name, 'w') as f:
+                for key in json_archivo.keys():
+                    f.write(key + "," + str(json_archivo[key]) + "\n")
+                f.close()
+
+    def importar_CSV(self, *args):
+        ubication = (askopenfile(title='Por favor, seleccione un archivo de Excel (CSV).',
+                                 mode='r', filetypes=[('CSV Files', '*.csv')]))
+        graph_import = {}
+        if (ubication != None):
+            with open(ubication.name, 'r') as f:
+                lines = f.readlines()
+                for line in lines:
+                    line = line.strip()
+                    if line[line.index(',') + 1:] == 'False':
+                        graph_import[line[:line.index(',')]] = False
+                    elif line[line.index(',') + 1:] == 'True':
+                        graph_import[line[:line.index(',')]] = True
+                    elif line[line.index(',') + 1:] == '{}':
+                        graph_import[line[:line.index(',')]] = {}
+                    elif line[line.index(',') + 1:] == "{'directed': True}":
+                        graph_import[line[:line.index(',')]] = {'directed': True}
+                    else:
+                        if line[:line.index(',')] not in graph_import:
+                            graph_import[line[:line.index(',')]] = list()
+                        if line[:line.index(',')] == 'nodes':
+                            for data in line[line.index(',') + 1:].split(','):
+                                graph_import[line[:line.index(',')]].append({data.split("'")[1]: data.split("'")[3]})
+                        else:
+                            for data in line[line.index(',') + 1:].replace("}, {", "}|{").split("|"):
+                                temp = data.split("'")
+                                graph_import[line[:line.index(',')]].append(
+                                    {temp[1]: float(temp[2].replace(':', '').replace(',', '')), temp[3]: temp[5],
+                                     temp[7]: temp[9]})
+            f.close()
+            self.G = json_graph.node_link_graph(graph_import)
+            self.func_actualizar_figure()
 
     def exportar_PDF(self, *args):
         if (self.urlPDF == None):
@@ -283,12 +327,13 @@ class VentanaPrincipal(tk.Tk):
         if (self.urlGraph != None):
             with open(self.urlGraph.name, "w") as fw:
                 json.dump(node_link_data(self.G), fw)
+            fw.close()
 
     def abrirarchivo(self, *args):
-        ubicacion = (askopenfile(title='Please select one (any) frame from your set of images.',
+        ubication = (askopenfile(title='Por favor, seleccione un archivo JSON.',
                                  mode='r', filetypes=[('JSON Files', '*.json')]))
-        if (ubicacion != None):
-            with open(ubicacion.name) as f:
+        if (ubication != None):
+            with open(ubication.name) as f:
                 js_graph = json.load(f)
             self.G = json_graph.node_link_graph(js_graph)
             self.func_actualizar_figure()
@@ -317,7 +362,7 @@ class VentanaPrincipal(tk.Tk):
         sub_menu_archivo_exportar.add_command(
             label="Excel",
             # accelerator="Ctrl+N",
-            command=self.archivo_nuevo_presionado
+            command=self.exportar_CSV
         )
         sub_menu_archivo_exportar.add_command(
             label="Imagen",
@@ -334,7 +379,7 @@ class VentanaPrincipal(tk.Tk):
         menu.add_command(
             label="Importar datos",
             # accelerator="Ctrl+N",
-            command=self.archivo_nuevo_presionado
+            command=self.importar_CSV
         )
         menu.add_command(
             label="Imprimir",
