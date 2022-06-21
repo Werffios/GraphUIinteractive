@@ -198,8 +198,8 @@ class VentanaPrincipal(tk.Tk):
     def func_eliminar_nodo(self, *args):
         self.label_error_delete.config(text="ERROR--> No existe el nodo: " + self.entry_Delete_node.get())
         self.label_error_delete.grid_forget()
-        if (self.entry_Delete_node.get() != ''):
-            if (self.G.has_node(self.entry_Delete_node.get())):
+        if self.entry_Delete_node.get() != '':
+            if self.G.has_node(self.entry_Delete_node.get()):
                 self.G.remove_node(self.entry_Delete_node.get())
                 self.func_actualizar_figure()
                 self.entry_Add_node.focus_set()
