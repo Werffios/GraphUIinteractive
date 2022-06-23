@@ -1,114 +1,78 @@
-"""# Devuelve verdadero si existe una sublista de la lista `nums[0…n)` con la suma dada
-def subsetSum(nums, total):
-    n = len(nums)
-
-    # `T[i][j]` almacena verdadero si se puede obtener un subconjunto con la suma `j`
-    # utilizando elementos hasta los primeros elementos `i`
-    T = [[False for x in range(total + 1)] for y in range(n + 1)]
-
-    # si la suma es cero
-    for i in range(n + 1):
-        T[i][0] = True
-
-    # hacer por i-ésimo artículo
-    for i in range(1, n + 1):
-
-        # considera todas las sumas desde 1 hasta el total
-        for j in range(1, total + 1):
-
-            # no incluye el i-ésimo elemento si `j-nums[i-1]` es negativo
-            if nums[i - 1] > j:
-                T[i][j] = T[i - 1][j]
-            else:
-                # encuentre el subconjunto con la suma `j` excluyendo o incluyendo el i-ésimo elemento
-                T[i][j] = T[i - 1][j] or T[i - 1][j - nums[i - 1]]
-
-    # valor máximo de retorno
-    for i in T:
-        print(i)
-    return T[n][total]
+import numpy as np
+import matplotlib.pyplot as plt
+import networkx as nx
 
 
-# Devuelve verdadero si la lista dada `nums[0…n-1]` se puede dividir en dos
-# sublistas con igual suma
-def partition(nums):
-    total = sum(nums)
+def nx_chunk(graph, chunk_size):
+    """
+    Chunk a graph into subgraphs with the specified minimum chunk size.
 
-    # devuelve verdadero si la suma es par y la lista se puede dividir en
-    # dos sublistas con igual suma
-    return (total & 1) == 0 and subsetSum(nums, total // 2)
+    Inspired by Lukes algorithm.
+    """
 
+    # convert to a tree;
+    # a balanced spanning tree would be preferable to a minimum spanning tree,
+    # but networkx does not seem to have an implementation of that
+    tree = nx.minimum_spanning_tree(graph)
 
-if __name__ == '__main__':
+    # select a root that is maximally far away from all leaves
+    leaves = [node for node, degree in tree.degree() if degree == 1]
+    minimum_distance_to_leaf = {node : tree.size() for node in tree.nodes()}
+    for leaf in leaves:
+        distances = nx.single_source_shortest_path_length(tree, leaf)
+        for node, distance in distances.items():
+            if distance < minimum_distance_to_leaf[node]:
+                minimum_distance_to_leaf[node] = distance
+    root = max(minimum_distance_to_leaf, key=minimum_distance_to_leaf.get)
 
-    # Entrada #: un conjunto de elementos
-    nums = [1, 20, 3, 9, 2, 11, 4]
+    # make the tree directed and compute the total descendants of each node
+    tree = nx.dfs_tree(tree, root)
+    total_descendants = get_total_descendants(tree)
 
-    if partition(nums):
-        print('Set can be partitioned')
-    else:
-        print('Set cannot be partitioned')
-"""
+    # prune chunks, starting from the leaves
+    chunks = []
+    max_descendants = np.max(list(total_descendants.values()))
+    while (max_descendants + 1 > chunk_size) & (tree.size() >= 2 * chunk_size):
+        for node in list(nx.topological_sort(tree))[::-1]: # i.e. from leaf to root
+            if (total_descendants[node] + 1) >= chunk_size:
+                chunk = list(nx.descendants(tree, node))
+                chunk.append(node)
+                chunks.append(chunk)
 
+                # update relevant data structures
+                tree.remove_nodes_from(chunk)
+                total_descendants = get_total_descendants(tree)
+                max_descendants = np.max(list(total_descendants.values()))
 
-def isSubsetSum(arr, n, sum, dp):
-    # Base Cases
-    if (sum == 0):
-        return True
-    if (n == 0 and sum != 0):
-        return False
+                break
 
-    # return solved subproblem
-    if (dp[n][sum] != -1):
-        return dp[n][sum]
+    # handle remainder
+    chunks.append(list(tree.nodes()))
 
-    # If last element is greater than sum, then
-    # ignore it
-    if (arr[n - 1] > sum):
-        return isSubsetSum(arr, n - 1, sum, dp)
-
-        # else, check if sum can be obtained by any of
-        # the following
-        # (a) including the last element
-        # (b) excluding the last element
-
-    # also store the subproblem in dp matrix
-    dp[n][sum] = isSubsetSum(arr, n - 1, sum, dp) or isSubsetSum(arr, n - 1, sum - arr[n - 1], dp)
-    """for i in dp:
-        print(i)"""
-    return dp[n][sum]
-
-
-# Returns true if arr[] can be partitioned in two
-# subsets of equal sum, otherwise false
-def findPartiion(arr, n):
-    # Calculate sum of the elements in array
-    sum = 0
-    for i in range(n):
-        sum += arr[i]
-
-    # If sum is odd, there cannot be two subsets
-    # with equal sum
-    if (sum % 2 != 0):
-        return False
-
-    # To store overlapping subproblems
-    dp = [[-1] * (sum + 1)] * (n + 1)
-    print(dp)
-
-    # Find if there is subset with sum equal to
-    # half of total sum
-    return isSubsetSum(arr, n, sum // 2, dp)
+    return chunks
 
 
-# Driver code
+def get_total_descendants(dag):
+    return {node : len(nx.descendants(dag, node)) for node in dag.nodes()}
 
-arr = [1, 20, 3, 9, 2, 11, 4]
-n = len(arr)
 
-# Function call
-if (findPartiion(arr, n) == True):
-    print("Can be divided into two subsets of equal sum")
-else:
-    print("Can not be divided into two subsets of equal sum")
+fig, axes = plt.subplots(1, 3, figsize=(12, 4))
 
+examples = nx.balanced_tree(2, 6), nx.random_powerlaw_tree(64), nx.karate_club_graph()
+
+for g, ax in zip(examples, axes):
+    chunks = nx_chunk(g, 5)
+    node_to_color = dict()
+    for ii, chunk in enumerate(chunks):
+        for node in chunk:
+            node_to_color[node] = ii
+    nx.draw(g, node_color=[node_to_color[node] for node in g.nodes()], cmap='tab20', ax=ax)
+
+plt.show()
+
+for ii, chunk in enumerate(chunks):
+    for node in chunk:
+        node_to_color[node] = ii
+
+nx.draw(g, node_color=[node_to_color[node] for node in g.nodes()], cmap='tab20')
+plt.show()
