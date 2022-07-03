@@ -10,13 +10,12 @@ from networkx.readwrite import json_graph
 
 from window_start import *
 
-
 class VentanaPrincipal(tk.Tk):
     def __init__(self, *args, **kwargs):  # Queda abierto a n argumentos o n argumentos con identificador
         super().__init__(*args, **kwargs)  # Se almacena por herencia el *args **kwargs
         ntkutils.placeappincenter(self)
         self.iconbitmap(r'icon.ico')
-        init = MyDialog(self, "Selección")
+        init = TypeGraph(self, "Selección")
         print(init.var.get())
         # Creación del grafo
         if init.var.get() == "Grafo":
@@ -262,11 +261,12 @@ class VentanaPrincipal(tk.Tk):
                                                initialfile="grafo_en_csv.csv")
         if (self.urlCSV_export != None):
             json_archivo = json.loads(json.dumps(json_graph.node_link_data(self.G)))
-            print("PDF guardado en:", str(self.urlCSV_export.name))
+            print("CSV guardado en:", str(self.urlCSV_export.name))
             with open(self.urlCSV_export.name, 'w') as f:
                 for key in json_archivo.keys():
                     f.write(key + "," + str(json_archivo[key]) + "\n")
                 f.close()
+            self.urlCSV_export = None
 
     def importar_CSV(self, *args):
         ubication = (askopenfile(title='Por favor, seleccione un archivo de Excel (CSV).',
@@ -309,7 +309,7 @@ class VentanaPrincipal(tk.Tk):
         if (self.urlPDF != None):
             print("PDF guardado en:", str(self.urlPDF.name))
             plt.savefig(str(self.urlPDF.name), format="PDF")
-
+            self.urlPDF = None
     def exportar_imagen(self, *args):
         if (self.urlPNG == None):
             self.urlPNG = asksaveasfile(filetypes=[('PNG', '*.png')],
@@ -318,7 +318,7 @@ class VentanaPrincipal(tk.Tk):
         if (self.urlPNG != None):
             print("Imagen guardada en:", str(self.urlPNG.name))
             plt.savefig(str(self.urlPNG.name), format="PNG")
-
+            self.urlPNG = None
     def guardar_archivo(self, *args):
         if (self.urlGraph == None):
             self.urlGraph = asksaveasfile(filetypes=[('JSON Document', '*.json')],
@@ -394,12 +394,12 @@ class VentanaPrincipal(tk.Tk):
         sub_menu_analizar_algoritmo.add_command(
             label="Dikstra",
             # accelerator="Ctrl+N",
-            command=lambda: abrir_ventana_dijkstra(self)
+            command=lambda: abrir_ventana_partition(self, self.G)
         )
         sub_menu_analizar_algoritmo.add_command(
-            label="Algoritmo 2",
+            label="Kernighan Lin",
             # accelerator="Ctrl+N",
-            command=self.archivo_nuevo_presionado
+            command=lambda: abrir_ventana_partition(self, self.G)
         )
         sub_menu_analizar_algoritmo.add_command(
             label="Algoritmo 3",
@@ -411,7 +411,7 @@ class VentanaPrincipal(tk.Tk):
             # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
-        menu.add_cascade(menu=sub_menu_analizar_algoritmo, label="Algoritmo")
+        menu.add_cascade(menu=sub_menu_analizar_algoritmo, label="Partitioner")
 
         return (menu, bar_menu)
 
@@ -476,35 +476,45 @@ class VentanaPrincipal(tk.Tk):
         return (menu, bar_menu)
 
 
-class ventanadikstra(tk.Toplevel):
+class PartitionKL(tk.Toplevel):
     # Atributo de la clase que indica si la ventana
     # secundaria está en uso.
     en_uso = False
 
-    def __init__(self, *args, **kwargs):  # Queda abierto a n argumentos o n argumentos con identificador
+
+    def __init__(self, Graph, *args, **kwargs):  # Queda abierto a n argumentos o n argumentos con identificador
         super().__init__(*args, **kwargs)  # Se almacena por herencia el *args **kwargs
+        self.__class__.en_uso = True
+        sv_ttk.set_theme("dark")
+        ntkutils.dark_title_bar(self)
+        ntkutils.blur_window_background(self)
+        self.G = Graph
+        self.frameFigure = ttk.Frame(self)
+        self.frameFigure.grid(row=0, column=1, rowspan=4, pady=20)
 
-        self.frameDijkstra = tk.Frame(self)
-        self.geometry("800x400")
-        self.title("Dijkstra")
-        self.config(bg='#F2B34D')
+        self.figure = plt.figure(frameon=True, figsize=(7, 5), dpi=100)
+        canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
 
-        self.frameDijkstra.grid(row=0, column=0, padx=20, pady=20, ipady=20)
+        self.figure.set_facecolor('#eafff5')
+        plt.axis('off')
+        communities = nx.algorithms.community.girvan_newman(self.G, most_valuable_edge=None)
 
-        self.labelTitleDikstra = tk.Label(self.frameDijkstra, text="ALG-DIJKSTRA", font=("Segoe UI", 25))
-        self.labelTitleDikstra.grid(row=0, column=0, columnspan=2, padx=20, pady=5)
+        node_groups = []
+        for com in next(communities):
+            node_groups.append(list(com))
 
-        self.labelorigen = tk.Label(self.frameDijkstra, text="Nodo Origen", font=("Segoe UI", 11))
-        self.labelorigen.grid(row=1, column=0)
+        color_map = []
+        for node in self.G:
+            if node in node_groups[0]:
+                color_map.append('blue')
+            else:
+                color_map.append('green')
+        pos = nx.spring_layout(self.G, 25)
+        nx.draw_networkx(self.G, pos=pos, node_color=color_map, alpha=0.9, edge_color='#bb85f0')
+        nx.draw_networkx_edge_labels(self.G, pos, nx.get_edge_attributes(self.G, "weight"))
 
-        self.entryOrigen = tk.Entry(self.frameDijkstra, name="entryNodoOrigen")
-        self.entryOrigen.grid(row=1, column=1, pady=10)
-
-        self.labeldestino = tk.Label(self.frameDijkstra, text="Nodo destino", font=("Segoe UI", 11))
-        self.labeldestino.grid(row=2, column=0)
-
-        self.entryDestino = tk.Entry(self.frameDijkstra, name="entryNodoDestino")
-        self.entryDestino.grid(row=2, column=1, pady=10)
+        canvas.draw()
+        canvas.get_tk_widget().pack()
 
     def destroy(self):
         # Restablecer el atributo al cerrarse.
@@ -512,6 +522,6 @@ class ventanadikstra(tk.Toplevel):
         return super().destroy()
 
 
-def abrir_ventana_dijkstra(self):
-    if not ventanadikstra.en_uso:
-        self.ventana_secundaria = ventanadikstra()
+def abrir_ventana_partition(self, Graph):
+    if not PartitionKL.en_uso:
+        self.ventana_secundaria = PartitionKL(Graph=Graph, master=self)

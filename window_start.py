@@ -4,7 +4,7 @@ from tkinter import ttk
 import sv_ttk
 
 
-class MyDialog(tk.simpledialog.Dialog):
+class TypeGraph(tk.simpledialog.Dialog):
 
     def __init__(self, parent, title):
         self.ok_button = None
