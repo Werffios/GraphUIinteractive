@@ -32,10 +32,10 @@ def create_partition(graph, num_groups):
         if not i in G.edges():
             information.append(i)
     print(information)
-    """nx.draw(subgraph_1)
+    nx.draw(subgraph_1)
     plt.show()
     nx.draw(subgraph_2)
-    plt.show()"""
+    plt.show()
 
 
 

@@ -1,13 +1,21 @@
+# Librerías necesarias para el funcionamiento de la ventana
+# Libreria JSON
 import json
+# Libreria para el manejo de archivos
 from tkinter.filedialog import askopenfile, asksaveasfile
+# Libreria para el manejo de grafos
 import networkx as nx
+# Libreria para
 import ntkutils
+# Libreria para mostrar pyplot
 from matplotlib import pyplot as plt
+# Libreria para mostrar figuras
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-
+# Libreria para exportar el grafo
 from networkx import node_link_data
+# Libreria para importar el grafo
 from networkx.readwrite import json_graph
-
+#
 from window_start import *
 
 class VentanaPrincipal(tk.Tk):

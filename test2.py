@@ -76,6 +76,7 @@ def create_partition(graph, num_groups):
     information2 = []
     partition_1, partition_2 = nx.algorithms.community.kernighan_lin_bisection(graph)
     subgraph_1, subgraph_2 = graph.subgraph(partition_1), graph.subgraph(partition_2)
+    print(graph.nodes())
     for i in graph.edges():
         if not i in subgraph_1.edges():
             information1.append(i)
@@ -87,5 +88,4 @@ def create_partition(graph, num_groups):
         if i in information2:
             resultado.append(i)
     print(resultado)
-
 create_partition(G, 2)
