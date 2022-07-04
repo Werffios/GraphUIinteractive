@@ -85,7 +85,8 @@ class VentanaPrincipal(tk.Tk):
         self.menu_ayuda = None
         self.bar_menu = None
         # CONFIGURACIÓN DE VENTANA
-        self.geometry("1200x730")
+        self.geometry("1200x680") # Tamaño de la ventana
+        self.resizable(False, False) # No se puede cambiar el tamaño de la ventana
         self.title("")
 
     def init_menubar(self):
@@ -217,14 +218,6 @@ class VentanaPrincipal(tk.Tk):
         self.button_Update_figure.grid(row=0, column=0, ipadx=60, pady=5)
 
         self.button_Update_figure.bind("<Button-1>", self.func_actualizar_figure)  # Evento para actualizar la gráfica
-
-        self.frameInformation.grid(row=5, column=0)  # Agrego el frame de información
-        self.label_Info = ttk.Label(self.frameInformation, text="Nicolás Suárez - Felipe Pulgar -"
-                                                                " Julio Fuelagan",
-                                           font=("Segoe UI", 11))  # Creo el label de información
-        self.label_Info.grid(row=0, column=0, padx=20, pady=5)
-
-
         self.func_actualizar_figure()  # Actualizo la gráfica
 
     def func_actualizar_figure(self, *args):
@@ -234,6 +227,12 @@ class VentanaPrincipal(tk.Tk):
         self.frameFigure = ttk.Frame(self)  # Creo el frame de la gráfica
         self.frameFigure.grid(row=0, column=1, rowspan=4, pady=20)  # Agrego el frame de la gráfica
 
+
+        self.frameInformation.grid(row=0, column=1)  # Agrego el frame de información
+        self.label_Info = ttk.Label(self.frameFigure, text="Nicolás Suárez - Felipe Pulgar -"
+                                                                " Julio Fuelagan",
+                                           font=("Segoe UI", 11))  # Creo el label de información
+        self.label_Info.grid(row=0, column=0, padx=20, pady=5)
         self.figure = plt.figure(frameon=True, figsize=(7, 5), dpi=100)  # Creo la gráfica
         canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)  # Creo el canvas de la gráfica
 
@@ -246,7 +245,7 @@ class VentanaPrincipal(tk.Tk):
                                      nx.get_edge_attributes(self.G, "weight"))  # Dibujo los pesos de las aristas
 
         canvas.draw()  # Dibujo la gráfica en la figura
-        canvas.get_tk_widget().pack()  # Agrego el canvas de la gráfica
+        canvas.get_tk_widget().grid(row=1, column=0)  # Agrego el canvas de la gráfica
 
     def func_eliminar_nodo(self, *args):
         self.label_error_delete.config(
