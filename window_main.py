@@ -419,23 +419,23 @@ class VentanaPrincipal(tk.Tk):
         )
         menu.add_cascade(menu=sub_menu_archivo_exportar, label="Exportar")  # Agrego el submenú de exportar
 
-        menu.add_command(  # Agrego el comando para salir
+        menu.add_command(
             label="Importar datos",
             # accelerator="Ctrl+N",
-            command=self.importar_CSV
+            command=self.importar_CSV  # Agrego el comando para importar datos
         )
         menu.add_command(
             label="Imprimir",
             # accelerator="Ctrl+N",
-            command=self.archivo_nuevo_presionado
+            command=self.archivo_nuevo_presionado  # Agrego el comando para imprimir
         )
 
-        return (menu, bar_menu)
+        return menu, bar_menu  # Retorno el menu y la barra de menú
 
     def menuanalizar(self, menu, bar_menu):
         sub_menu_analizar_algoritmo = tk.Menu(menu, tearoff=False)
         sub_menu_analizar_algoritmo.add_command(
-            label="Dikstra",
+            label="Kernighan Lin",
             # accelerator="Ctrl+N",
             command=lambda: abrir_ventana_partition(self, self.G)
         )
@@ -456,7 +456,7 @@ class VentanaPrincipal(tk.Tk):
         )
         menu.add_cascade(menu=sub_menu_analizar_algoritmo, label="Partitioner")
 
-        return (menu, bar_menu)
+        return menu, bar_menu
 
     def menuherramienta(self, menu, bar_menu):
         menu.add_command(
@@ -464,7 +464,7 @@ class VentanaPrincipal(tk.Tk):
             # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
-        return (menu, bar_menu)
+        return menu, bar_menu
 
     def menuaplicacion(self, menu, bar_menu):
         sub_menu_aplicacion = tk.Menu(menu, tearoff=False)
@@ -490,7 +490,7 @@ class VentanaPrincipal(tk.Tk):
         )
         menu.add_cascade(menu=sub_menu_aplicacion, label="Aplicación")
 
-        return (menu, bar_menu)
+        return menu, bar_menu
 
     def menuventana(self, menu, bar_menu):
         menu.add_command(
@@ -503,7 +503,7 @@ class VentanaPrincipal(tk.Tk):
             # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
-        return (menu, bar_menu)
+        return menu, bar_menu
 
     def menuayuda(self, menu, bar_menu):
         menu.add_command(
@@ -516,7 +516,7 @@ class VentanaPrincipal(tk.Tk):
             # accelerator="Ctrl+N",
             command=self.archivo_nuevo_presionado
         )
-        return (menu, bar_menu)
+        return menu, bar_menu
 
 
 class PartitionKL(tk.Toplevel):
@@ -558,12 +558,12 @@ class PartitionKL(tk.Toplevel):
         canvas.draw()
         canvas.get_tk_widget().pack()
 
-    def destroy(self):
+    def destroy(self):  # Se cierra la ventana
         # Restablecer el atributo al cerrarse.
-        self.__class__.en_uso = False
-        return super().destroy()
+        self.__class__.en_uso = False  # Restablecer el atributo
+        return super().destroy()  # Se llama al método destroy de la clase padre.
 
 
-def abrir_ventana_partition(self, Graph):
-    if not PartitionKL.en_uso:
-        self.ventana_secundaria = PartitionKL(Graph=Graph, master=self)
+def abrir_ventana_partition(self, Graph):  # Se abre la ventana secundaria
+    if not PartitionKL.en_uso:  # Si no está en uso
+        self.ventana_secundaria = PartitionKL(Graph=Graph, master=self)  # Se crea la ventana secundaria
