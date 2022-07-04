@@ -4,6 +4,7 @@ import json
 # Libreria para el manejo de archivos
 from tkinter.filedialog import askopenfile, asksaveasfile
 # Libreria para el manejo de grafos
+import darkdetect
 import networkx as nx
 # Libreria para
 import ntkutils
@@ -435,14 +436,14 @@ class VentanaPrincipal(tk.Tk):
     def menuanalizar(self, menu, bar_menu):
         sub_menu_analizar_algoritmo = tk.Menu(menu, tearoff=False)
         sub_menu_analizar_algoritmo.add_command(
-            label="Kernighan Lin",
+            label="Girvan Newman",
             # accelerator="Ctrl+N",
-            command=lambda: abrir_ventana_partition(self, self.G)
+            command=lambda: abrir_ventana_partition_Girvan_Newman(self, self.G)
         )
         sub_menu_analizar_algoritmo.add_command(
             label="Kernighan Lin",
             # accelerator="Ctrl+N",
-            command=lambda: abrir_ventana_partition(self, self.G)
+            command=lambda: abrir_ventana_partition_Kernighan_Lin(self, self.G)
         )
         sub_menu_analizar_algoritmo.add_command(
             label="Algoritmo 3",
@@ -519,40 +520,49 @@ class VentanaPrincipal(tk.Tk):
         return menu, bar_menu
 
 
-class PartitionKL(tk.Toplevel):
+class PartitionGN(tk.Toplevel):
     # Atributo de la clase que indica si la ventana
     # secundaria está en uso.
     en_uso = False
 
     def __init__(self, Graph, *args, **kwargs):  # Queda abierto a n argumentos o n argumentos con identificador
         super().__init__(*args, **kwargs)  # Se almacena por herencia el *args **kwargs
-        self.__class__.en_uso = True
-        sv_ttk.set_theme("dark")
-        ntkutils.dark_title_bar(self)
-        ntkutils.blur_window_background(self)
+        self.__class__.en_uso = True  # Se indica que la ventana está en uso
+        self.iconbitmap(r'icon.ico')  # Se carga el icono
         self.G = Graph
         self.frameFigure = ttk.Frame(self)
         self.frameFigure.grid(row=0, column=1, rowspan=4, pady=20)
-
         self.figure = plt.figure(frameon=True, figsize=(7, 5), dpi=100)
         canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
-
-        self.figure.set_facecolor('#eafff5')
+        self.figure.set_facecolor('#eafff5')  # Se cambia el color de fondo
         plt.axis('off')
         communities = nx.algorithms.community.girvan_newman(self.G, most_valuable_edge=None)
-
         node_groups = []
-        for com in next(communities):
-            node_groups.append(list(com))
-
+        for community in next(communities):
+            node_groups.append(list(community))
+        print(node_groups)
+        edges_subgraph1 = []
+        edges_subgraph2 = []
+        edges_subgraph_over = []
+        color_list = []
+        for edge in self.G.edges():
+            if edge[0] in node_groups[0] and edge[1] in node_groups[0]:
+                edges_subgraph1.append(edge)
+                color_list.append('#44e011')
+            elif edge[0] in node_groups[1] and edge[1] in node_groups[1]:
+                edges_subgraph2.append(edge)
+                color_list.append('#bb85f0')
+            else:
+                edges_subgraph_over.append(edge)
+                color_list.append('red')
         color_map = []
         for node in self.G:
             if node in node_groups[0]:
-                color_map.append('blue')
+                color_map.append('#44e011')
             else:
-                color_map.append('green')
+                color_map.append('#bb85f0')
         pos = nx.spring_layout(self.G, 25)
-        nx.draw_networkx(self.G, pos=pos, node_color=color_map, alpha=0.9, edge_color='#bb85f0')
+        nx.draw_networkx(self.G, pos=pos, node_color=color_map, alpha=0.9, edge_color=color_list)
         nx.draw_networkx_edge_labels(self.G, pos, nx.get_edge_attributes(self.G, "weight"))
 
         canvas.draw()
@@ -564,6 +574,80 @@ class PartitionKL(tk.Toplevel):
         return super().destroy()  # Se llama al método destroy de la clase padre.
 
 
-def abrir_ventana_partition(self, Graph):  # Se abre la ventana secundaria
+def abrir_ventana_partition_Girvan_Newman(self, Graph):  # Se abre la ventana secundaria
+    if not PartitionGN.en_uso:  # Si no está en uso
+        self.ventana_secundaria = PartitionGN(Graph=Graph, master=self)  # Se crea la ventana secundaria
+        ntkutils.placeappincenter(self.ventana_secundaria)  # Se coloca en el centro
+        if darkdetect.theme() == "Dark":
+            sv_ttk.set_theme("dark")
+            ntkutils.dark_title_bar(self.ventana_secundaria)
+            ntkutils.blur_window_background(self.ventana_secundaria)
+        else:
+            sv_ttk.set_theme("light")
+            ntkutils.blur_window_background(self.ventana_secundaria)
+        self.ventana_secundaria.focus()  # Se pone el foco en la ventana
+
+class PartitionKL(tk.Toplevel):
+    # Atributo de la clase que indica si la ventana
+    # secundaria está en uso.
+    en_uso = False
+
+    def __init__(self, Graph, *args, **kwargs):  # Queda abierto a n argumentos o n argumentos con identificador
+        super().__init__(*args, **kwargs)  # Se almacena por herencia el *args **kwargs
+        self.__class__.en_uso = True  # Se indica que la ventana está en uso
+        self.G = Graph
+        self.frameFigure = ttk.Frame(self)
+        self.frameFigure.grid(row=0, column=1, rowspan=4, pady=20)
+
+        self.figure = plt.figure(frameon=True, figsize=(7, 5), dpi=100)
+        canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
+
+        self.figure.set_facecolor('#eafff5')
+        plt.axis('off')
+
+        partition_1, partition_2 = nx.algorithms.community.kernighan_lin_bisection(self.G)
+        node_groups = [list(partition_1), list(partition_2)]
+        edges_subgraph1 = []
+        edges_subgraph2 = []
+        edges_subgraph_over = []
+        color_list = []
+        for edge in self.G.edges():
+            if edge[0] in node_groups[0] and edge[1] in node_groups[0]:
+                edges_subgraph1.append(edge)
+                color_list.append('#44e011')
+            elif edge[0] in node_groups[1] and edge[1] in node_groups[1]:
+                edges_subgraph2.append(edge)
+                color_list.append('#bb85f0')
+            else:
+                edges_subgraph_over.append(edge)
+                color_list.append('red')
+        color_map = []
+        for node in self.G:
+            if node in node_groups[0]:
+                color_map.append('#44e011')
+            else:
+                color_map.append('#bb85f0')
+        pos = nx.spring_layout(self.G, 25)
+        nx.draw_networkx(self.G, pos=pos, node_color=color_map, alpha=0.9, edge_color=color_list)
+        nx.draw_networkx_edge_labels(self.G, pos, nx.get_edge_attributes(self.G, "weight"))
+
+        canvas.draw()
+        canvas.get_tk_widget().pack()
+    def destroy(self):  # Se cierra la ventana
+        # Restablecer el atributo al cerrarse.
+        self.__class__.en_uso = False  # Restablecer el atributo
+        return super().destroy()  # Se llama al método destroy de la clase padre.
+
+
+def abrir_ventana_partition_Kernighan_Lin(self, Graph):  # Se abre la ventana secundaria
     if not PartitionKL.en_uso:  # Si no está en uso
         self.ventana_secundaria = PartitionKL(Graph=Graph, master=self)  # Se crea la ventana secundaria
+        ntkutils.placeappincenter(self.ventana_secundaria)  # Se coloca en el centro
+        if darkdetect.theme() == "Dark":
+            sv_ttk.set_theme("dark")
+            ntkutils.dark_title_bar(self.ventana_secundaria)
+            ntkutils.blur_window_background(self.ventana_secundaria)
+        else:
+            sv_ttk.set_theme("light")
+            ntkutils.blur_window_background(self.ventana_secundaria)
+        self.ventana_secundaria.focus()  # Se pone el foco en la ventana

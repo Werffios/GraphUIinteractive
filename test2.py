@@ -63,29 +63,13 @@ import matplotlib.pyplot as plt
 
 G = nx.Graph()
 
-# a b c d
-
 G.add_edge('a', 'b', weight=1.0)
 G.add_edge('a', 'c', weight=2.0)
 G.add_edge('b', 'c', weight=3.0)
 G.add_edge('b', 'd', weight=4.0)
 G.add_edge('c', 'd', weight=5.0)
 
-def create_partition(graph, num_groups):
-    information1 = []
-    information2 = []
+def create_partition(graph):
     partition_1, partition_2 = nx.algorithms.community.kernighan_lin_bisection(graph)
-    subgraph_1, subgraph_2 = graph.subgraph(partition_1), graph.subgraph(partition_2)
-    print(graph.nodes())
-    for i in graph.edges():
-        if not i in subgraph_1.edges():
-            information1.append(i)
-    for i in graph.edges():
-        if not i in subgraph_2.edges():
-            information2.append(i)
-    resultado = []
-    for i in information1:
-        if i in information2:
-            resultado.append(i)
-    print(resultado)
-create_partition(G, 2)
+    print(partition_1)
+create_partition(G)
