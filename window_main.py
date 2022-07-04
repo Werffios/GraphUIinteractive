@@ -2,6 +2,7 @@
 # Libreria JSON
 import json
 # Libreria para el manejo de archivos
+from tkinter import messagebox
 from tkinter.filedialog import askopenfile, asksaveasfile
 # Libreria para el manejo de grafos
 import darkdetect
@@ -60,9 +61,15 @@ class VentanaPrincipal(tk.Tk):
         self.entry_Delete_node = None
         self.button_Delete_node = None
         self.frameDelete_node = ttk.Frame(self, style="TFrame")
+        # Inicializar frame de información
+        self.label_Info = None
+        self.frameInformation = ttk.Frame(self, style="TFrame")
         # Inicializar objetos para el "tablero" o donde se creara la figura "Grafo"
         self.frameFigure = ttk.Frame(self)
         self.figure = None
+        # Inicializar objetos para actualizar la figura
+        self.button_Update_figure = None
+        self.frameUpdate_figure = ttk.Frame(self, style="TFrame")
         # Inicializar url o path del archivo de guardado
         self.urlGraph = None
         self.urlPNG = None
@@ -78,7 +85,7 @@ class VentanaPrincipal(tk.Tk):
         self.menu_ayuda = None
         self.bar_menu = None
         # CONFIGURACIÓN DE VENTANA
-        self.geometry("1200x700")
+        self.geometry("1200x730")
         self.title("")
 
     def init_menubar(self):
@@ -204,12 +211,26 @@ class VentanaPrincipal(tk.Tk):
 
         self.frameDelete_node.grid(row=2, column=0)  # Agrego el frame de eliminar nodos
 
+
+        self.frameUpdate_figure.grid(row=3, column=0)
+        self.button_Update_figure = ttk.Button(self.frameUpdate_figure, text="Actualizar", style="Accent.TButton")
+        self.button_Update_figure.grid(row=0, column=0, ipadx=60, pady=5)
+
+        self.button_Update_figure.bind("<Button-1>", self.func_actualizar_figure)  # Evento para actualizar la gráfica
+
+        self.frameInformation.grid(row=5, column=0)  # Agrego el frame de información
+        self.label_Info = ttk.Label(self.frameInformation, text="Nicolás Suárez - Felipe Pulgar -"
+                                                                " Julio Fuelagan",
+                                           font=("Segoe UI", 11))  # Creo el label de información
+        self.label_Info.grid(row=0, column=0, padx=20, pady=5)
+
+
         self.func_actualizar_figure()  # Actualizo la gráfica
 
     def func_actualizar_figure(self, *args):
         self.frameFigure.grid_remove()  # Elimino el frame de la gráfica
         self.frameFigure.grid_forget()  # Elimino el frame de la gráfica
-
+        plt.close()  # Cierro la gráfica
         self.frameFigure = ttk.Frame(self)  # Creo el frame de la gráfica
         self.frameFigure.grid(row=0, column=1, rowspan=4, pady=20)  # Agrego el frame de la gráfica
 
@@ -270,6 +291,7 @@ class VentanaPrincipal(tk.Tk):
     def func_agregar_arista(self, *args):
         if not (self.entry_Add_edge_peso.get().isnumeric()):  # Si el peso no es un número
             self.entry_Add_edge_peso.delete(0, tk.END)  # Borro el entry de peso
+            self.entry_Add_edge_peso.state(['invalid'])  # Cambio el estado del entry de peso
 
         elif (self.entry_Add_edge_vertice_o.get() != '') and (self.entry_Add_edge_peso.get() != '') and (
                 self.entry_Add_edge_vertice_d.get() != ''):  # Si los entries de origen, peso y destino no están vacíos
@@ -277,6 +299,7 @@ class VentanaPrincipal(tk.Tk):
                             weight=int(self.entry_Add_edge_peso.get()))  # Agrego la arista
 
             self.func_actualizar_figure()  # Actualizo la gráfica
+            self.entry_Add_edge_peso.state(['!invalid'])  # Cambio el estado del entry de peso
 
             self.entry_Add_edge_vertice_o.delete(0, tk.END)  # Borro el entry de origen
             self.entry_Add_edge_vertice_d.delete(0, tk.END)  # Borro el entry de destino
@@ -446,9 +469,9 @@ class VentanaPrincipal(tk.Tk):
             command=lambda: abrir_ventana_partition_Kernighan_Lin(self, self.G)
         )
         sub_menu_analizar_algoritmo.add_command(
-            label="Algoritmo 3",
+            label="Louvain",
             # accelerator="Ctrl+N",
-            command=self.archivo_nuevo_presionado
+            command=lambda: abrir_ventana_partition_Louvain(self, self.G)
         )
         sub_menu_analizar_algoritmo.add_command(
             label="Algoritmo k",
@@ -530,8 +553,14 @@ class PartitionGN(tk.Toplevel):
         self.__class__.en_uso = True  # Se indica que la ventana está en uso
         self.iconbitmap(r'icon.ico')  # Se carga el icono
         self.G = Graph
+
+        self.frameTitle = tk.Frame(self)  # Se crea un frame para el título
+        self.frameTitle.grid(row=0, column=0)  # Se empaqueta el frame
+        self.ttk_label = ttk.Label(self.frameTitle, text="Girvan-Newman", font=("Segoe UI", 25))
+        self.ttk_label.grid(row=0, column=0)  # Se empaqueta el label
+
         self.frameFigure = ttk.Frame(self)
-        self.frameFigure.grid(row=0, column=1, rowspan=4, pady=20)
+        self.frameFigure.grid(row=1, column=0, pady=20)
         self.figure = plt.figure(frameon=True, figsize=(7, 5), dpi=100)
         canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
         self.figure.set_facecolor('#eafff5')  # Se cambia el color de fondo
@@ -540,7 +569,6 @@ class PartitionGN(tk.Toplevel):
         node_groups = []
         for community in next(communities):
             node_groups.append(list(community))
-        print(node_groups)
         edges_subgraph1 = []
         edges_subgraph2 = []
         edges_subgraph_over = []
@@ -575,7 +603,7 @@ class PartitionGN(tk.Toplevel):
 
 
 def abrir_ventana_partition_Girvan_Newman(self, Graph):  # Se abre la ventana secundaria
-    if not PartitionGN.en_uso:  # Si no está en uso
+    if not PartitionGN.en_uso and len(Graph.nodes) > 0:  # Si no está en uso
         self.ventana_secundaria = PartitionGN(Graph=Graph, master=self)  # Se crea la ventana secundaria
         ntkutils.placeappincenter(self.ventana_secundaria)  # Se coloca en el centro
         if darkdetect.theme() == "Dark":
@@ -596,8 +624,15 @@ class PartitionKL(tk.Toplevel):
         super().__init__(*args, **kwargs)  # Se almacena por herencia el *args **kwargs
         self.__class__.en_uso = True  # Se indica que la ventana está en uso
         self.G = Graph
+
+        self.frameTitle = tk.Frame(self)  # Se crea un frame para el título
+        self.frameTitle.grid(row=0, column=0)  # Se empaqueta el frame
+        self.ttk_label = ttk.Label(self.frameTitle, text="Kernighan-Lin", font=("Segoe UI", 25))
+        self.ttk_label.grid(row=0, column=0)  # Se empaqueta el label
+
+
         self.frameFigure = ttk.Frame(self)
-        self.frameFigure.grid(row=0, column=1, rowspan=4, pady=20)
+        self.frameFigure.grid(row=1, column=0, rowspan=4, pady=20)
 
         self.figure = plt.figure(frameon=True, figsize=(7, 5), dpi=100)
         canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
@@ -640,8 +675,76 @@ class PartitionKL(tk.Toplevel):
 
 
 def abrir_ventana_partition_Kernighan_Lin(self, Graph):  # Se abre la ventana secundaria
-    if not PartitionKL.en_uso:  # Si no está en uso
-        self.ventana_secundaria = PartitionKL(Graph=Graph, master=self)  # Se crea la ventana secundaria
+    if not PartitionKL.en_uso and len(Graph.nodes) > 0:  # Si no está en uso
+        if Graph.is_directed():
+            messagebox.showerror("Advertencia", "El grafo no debe ser dirigido.")
+        self.ventana_secundaria = PartitionKL(Graph=Graph.to_undirected(), master=self)  # Se crea la ventana secundaria
+        ntkutils.placeappincenter(self.ventana_secundaria)  # Se coloca en el centro
+        if darkdetect.theme() == "Dark":
+            sv_ttk.set_theme("dark")
+            ntkutils.dark_title_bar(self.ventana_secundaria)
+            ntkutils.blur_window_background(self.ventana_secundaria)
+        else:
+            sv_ttk.set_theme("light")
+            ntkutils.blur_window_background(self.ventana_secundaria)
+        self.ventana_secundaria.focus()  # Se pone el foco en la ventana
+
+class PartitionLouvain(tk.Toplevel):
+    # Atributo de la clase que indica si la ventana
+    # secundaria está en uso.
+    en_uso = False
+
+    def __init__(self, Graph, *args, **kwargs):  # Queda abierto a n argumentos o n argumentos con identificador
+        super().__init__(*args, **kwargs)  # Se almacena por herencia el *args **kwargs
+        self.__class__.en_uso = True  # Se indica que la ventana está en uso
+        self.G = Graph
+        self.frameFigure = ttk.Frame(self)
+        self.frameFigure.grid(row=1, column=0, rowspan=4, pady=20)
+
+        self.figure = plt.figure(frameon=True, figsize=(7, 5), dpi=100)
+        canvas = FigureCanvasTkAgg(self.figure, master=self.frameFigure)
+
+        self.figure.set_facecolor('#eafff5')
+        plt.axis('off')
+
+        partition_1, partition_2 = nx.algorithms.community.louvain_communities(self.G, resolution=0.9)
+        node_groups = [list(partition_1), list(partition_2)]
+        edges_subgraph1 = []
+        edges_subgraph2 = []
+        edges_subgraph_over = []
+        color_list = []
+        for edge in self.G.edges():
+            if edge[0] in node_groups[0] and edge[1] in node_groups[0]:
+                edges_subgraph1.append(edge)
+                color_list.append('#44e011')
+            elif edge[0] in node_groups[1] and edge[1] in node_groups[1]:
+                edges_subgraph2.append(edge)
+                color_list.append('#bb85f0')
+            else:
+                edges_subgraph_over.append(edge)
+                color_list.append('red')
+        color_map = []
+        for node in self.G:
+            if node in node_groups[0]:
+                color_map.append('#44e011')
+            else:
+                color_map.append('#bb85f0')
+        pos = nx.spring_layout(self.G, 25)
+        nx.draw_networkx(self.G, pos=pos, node_color=color_map, alpha=0.9, edge_color=color_list)
+        nx.draw_networkx_edge_labels(self.G, pos, nx.get_edge_attributes(self.G, "weight"))
+
+        canvas.draw()
+        canvas.get_tk_widget().pack()
+    def destroy(self):  # Se cierra la ventana
+        # Restablecer el atributo al cerrarse.
+        self.__class__.en_uso = False  # Restablecer el atributo
+        return super().destroy()  # Se llama al método destroy de la clase padre.
+
+
+def abrir_ventana_partition_Louvain(self, Graph):  # Se abre la ventana secundaria
+    if not PartitionLouvain.en_uso and len(Graph.nodes) > 0:  # Si no está en uso
+
+        self.ventana_secundaria = PartitionLouvain(Graph=Graph, master=self)  # Se crea la ventana secundaria
         ntkutils.placeappincenter(self.ventana_secundaria)  # Se coloca en el centro
         if darkdetect.theme() == "Dark":
             sv_ttk.set_theme("dark")
