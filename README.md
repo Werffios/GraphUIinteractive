@@ -1,4 +1,5 @@
 # GraphUIinteractive
+<h1> DEJO EL ARCHIVO PUBLICO PARA POSTERIOR USO LIBRE EN LA ASIGNATURA </h1>
 <h1> Proyecto Análisis y Diseño de Algoritmos </h1>
 El presente proyecto pretende estudiar el manejo de algoritmos sobre grafos haciendo un análisis de algunos algoritmos en el ámbito de problemas de optimización. 
 El funcionamiento de cada algoritmo estudiado se representará en la máquina mediante un simulador para poder observar los resultados de ejecución de forma más exacta. 
