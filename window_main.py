@@ -20,6 +20,7 @@ from networkx.readwrite import json_graph
 # Clase para la ventana de la selección de tipo de grafo
 from window_start import *
 
+## install darkdetect, networkx, matplotlib, ntkutils, sv_ttk
 
 class VentanaPrincipal(tk.Tk):
     def __init__(self, *args, **kwargs):  # Queda abierto a n argumentos o n argumentos con identificador
@@ -229,8 +230,7 @@ class VentanaPrincipal(tk.Tk):
 
 
         self.frameInformation.grid(row=0, column=1)  # Agrego el frame de información
-        self.label_Info = ttk.Label(self.frameFigure, text="Nicolás Suárez - Felipe Pulgar -"
-                                                                " Julio Fuelagan",
+        self.label_Info = ttk.Label(self.frameFigure, text="Nicolás Suárez",
                                            font=("Segoe UI", 11))  # Creo el label de información
         self.label_Info.grid(row=0, column=0, padx=20, pady=5)
         self.figure = plt.figure(frameon=True, figsize=(7, 5), dpi=100)  # Creo la gráfica

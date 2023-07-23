@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.simpledialog
 from tkinter import ttk
 
 import sv_ttk
