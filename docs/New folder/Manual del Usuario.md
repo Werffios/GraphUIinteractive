@@ -1,16 +1,23 @@
+﻿||||
+| :- | :-: | -: |
+
+![ref1]**Manual del usuario**
 
 
 
-# APLICACIÓN INTERACTIVA PARA LA CREACIÓN, ANALÍSIS Y ESTUDIO DE GRAFOS
+**APLICACIÓN INTERACTIVA PARA LA CREACION, ANALISIS Y ESTUDIO DE GRAFOS**
 
 
 
+![ref2]
+
+![ref1]
 
 **Manual del usuario**
 
 ![A screenshot of a computer
 
-Description automatically generated with low confidence](images/2.png)
+Description automatically generated with low confidence](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.003.png)
 
 **NICOLÁS ALONSO SUÁREZ RODRÍGUEZ**
 
@@ -28,57 +35,60 @@ Description automatically generated with low confidence](images/2.png)
 **2022-01**
 
 # Tabla de Contenidos
-[Introducción](#_toc1041345429)
+[Introducción	3](#_toc1041345429)
 
-[Descargar la aplicación](#_toc824259429)
+[Descargar la aplicación	4](#_toc824259429)
 
-[Descargar el archivo comprimido](#_toc2077702671)
+[Descargar el archivo comprimido	4](#_toc2077702671)
 
-[Abrir el proyecto](#_toc160345108)
+[Abrir el proyecto	5](#_toc160345108)
 
-[Ejecutar el proyecto](#_toc2092670558)
+[Ejecutar el proyecto	9](#_toc2092670558)
 
-[1.	Agregar arista](#_toc2034696993)
+[1.	Agregar arista	10](#_toc2034696993)
 
-[2.	Agregar nodo](#_toc1962161642)
+[2.	Agregar nodo	11](#_toc1962161642)
 
-[3.	Eliminar nodo](#_toc90221320)
+[3.	Eliminar nodo	11](#_toc90221320)
 
-[4.	Archivo](#_toc1403582429)
+[4.	Archivo	12](#_toc1403582429)
 
-[4.1	Abrir](#_toc2064683488)
+[4.1	Abrir	12](#_toc2064683488)
 
-[4.2Guardar](#_toc1561267582)
+[4.2Guardar	12](#_toc1561267582)
 
-[4.3	Guardar Como](#_toc793275974)
+[4.3	Guardar Como	13](#_toc793275974)
 
-[4.4 Exportar](#_toc1940673019)
+[4.4 Exportar	13](#_toc1940673019)
 
-[4.5 Importar datos](#_toc604779195)
+[4.5 Importar datos	16](#_toc604779195)
 
-[4.6 Imprimir](#_toc734057429)
+[4.6 Imprimir	16](#_toc734057429)
 
-[5.	Analizar](#_toc1890617062)
+[5.	Analizar	17](#_toc1890617062)
 
-[5.1	Algoritmo Kernighan Lin](#_toc155889010)
+[5.1	Algoritmo Kernighan Lin	17](#_toc155889010)
 
-[5.2	Algoritmo Girvan Newman](#_toc114974196)
+[5.2	Algoritmo Girvan Newman	18](#_toc114974196)
 
-[5.3	Algoritmo Louvain](#_toc287520851)
+[5.3	Louvain	19](#_toc287520851)
 
-[6.	Ayuda](#_toc1581044200)
+[6.	Ayuda	19](#_toc1581044200)
 
-[6.1	Ayuda](#_toc385075562)
+[6.1	Ayuda	20](#_toc385075562)
 
-[6.2	Acerca de Grafos](#_toc652869875)
+[6.2	Acerca de Grafos	20](#_toc652869875)
 
-[7.	Visualizador del grafo](#_toc462737294)
+[7.	Visualizador del grafo	20](#_toc462737294)
 
-[8.	Botones de control](#_toc1184103483)
+[8.	Botones de control	20](#_toc1184103483)
 
-[9.	Actualizar](#_toc933341666)
+[9.	Actualizar	20](#_toc933341666)
 
-[Atajos de teclado](#_toc480329174)
+[Atajos de teclado	20](#_toc480329174)
+
+[Referencias	21](#_toc1129490351)
+
 
 
 # <a name="_toc40960658"></a><a name="_toc1041345429"></a>**Introducción**
