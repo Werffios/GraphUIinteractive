@@ -4,51 +4,22 @@
 # APLICACIÓN INTERACTIVA PARA LA CREACIÓN, ANALÍSIS Y ESTUDIO DE GRAFOS
 
 
-
-
-**Manual del usuario**
-
-![A](images/2.jpeg)
-
-**NICOLÁS ALONSO SUÁREZ RODRÍGUEZ**
-
-
-![ref2]
-
-**LUZ ENITH GUERRERO** 
-
-**UNIVERSIDAD NACIONAL DE COLOMBIA**
-
-**MANIZALES-COLOMBIA**
-
-**ANALISIS Y DISEÑOS DE ALGORITMOS**
-
-**2022-01**
-
-# Tabla de Contenidos
-[Introducción](#_toc1041345429)
-
-[Descargar la aplicación](#_toc824259429)
-
-[Descargar el archivo comprimido](#_toc2077702671)
-
-[Abrir el proyecto](#_toc160345108)
-
-[Ejecutar el proyecto](#_toc2092670558)
-
-[1.	Agregar arista](#_toc2034696993)
-
-[2.	Agregar nodo](#_toc1962161642)
-
-[3.	Eliminar nodo](#_toc90221320)
-
-[4.	Archivo](#_toc1403582429)
-
-[4.1	Abrir](#_toc2064683488)
-
-[4.2Guardar](#_toc1561267582)
-
-[4.3	Guardar Como](#_toc793275974)
+## Tabla de Contenidos
+[Introducción](#introduction)
+[Descargar la aplicación](#download)
+[Ejecutar el proyecto](#run)
+1. [Agregar arista](#addEdge)
+2. [Agregar nodo](#addNode)
+3. [Eliminar nodo](#deleteNode)
+4. [Archivo](#file)
+    * [Abrir](#open)
+    * [Guardar](#save)
+    * [Guardar Como](#saveAs)
+    * [Exportar](#export)
+    * [Importar datos](#import)
+    * [Imprimir](#print)
+5. [Analizar](#analyze)
+    * [Algoritmo Kernighan Lin](#kernighanLin)
 
 [4.4 Exportar](#_toc1940673019)
 
