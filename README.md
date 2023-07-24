@@ -8,9 +8,7 @@
 
 **Manual del usuario**
 
-![A screenshot of a computer
-
-Description automatically generated with low confidence](images/2.png)
+![A](images/2.jpeg)
 
 **NICOLÁS ALONSO SUÁREZ RODRÍGUEZ**
 
