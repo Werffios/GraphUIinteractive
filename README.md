@@ -39,7 +39,6 @@
 
 En este documento se pretende dar a conocer a quien lo lea la forma para descargar y ejecutar una aplicación realizada en Python 3, en la cual podemos graficar diferentes tipos de Grafos, aplicarles algoritmos de partición y exportar el grafo realizado en diferentes formatos.
 
-
 # <a name="download"></a>**Descargar la aplicación**
 
 Abrir el siguiente ***[link](https://github.com/Werffios/GraphUIinteractive.git)*** para acceder al repositorio del GitHub que contiene el archivo completo.
@@ -63,26 +62,11 @@ Posteriormente debemos configurar el interprete con PyCharm para que el proyecto
 
 Luego damos clic en settings
 
-![Graphical user interface, application
-
-Description automatically generated](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.009.png)
+![](images/9.png)
 
 Escribimos en el buscador, interprete y seleccionamos Python interpreter, ahora le damos clic en instalar
 
 ![](images/10.png)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 En la barra de búsqueda escribimos sv-ttk, seleccionamos ese paquete  para posteriormente darle en el botón install ubicado en la parte inferior de la ventana.
 
@@ -94,66 +78,34 @@ Ahora vamos a ejecutar el programa, si  no te aparece habilitado el botón para 
 
 ![](images/12.png)
 
-![](images/13.png)Debemos indicarle que deseamos ejecutar, para ello hacemos clic en el botón que indica la siguiente imagen
+![](images/13.png)
+
+Debemos indicarle que deseamos ejecutar, para ello hacemos clic en el botón que indica la siguiente imagen
 
 
-
-
-**Nota:** Se deben instalar las librerías necesarias en caso de marcar error si no las contiene dentro de su editor.
+>**Nota:** 
+> 
+> Se deben instalar las librerías necesarias en caso de marcar error si no las contiene dentro de su editor.
 
 Con esto ya podemos ejecutar nuestro proyecto.
 
-**1**
-
-**4**
-
-**5**
-
-**2**
-
-**6**
-
-**8**
-
-
-
-**7**
-
-
-
-
-**3**
-
-Actualizar
-
-**9**
 
 ![](images/14.png)
 
 
+# <a name="run"></a>**Ejecutar el proyecto**
 
-
-# <a name="_toc2092670558"></a>**Ejecutar el proyecto**
-
-![](images/15.png)Lo primero es dar clic en el botón de Run 
-
+![](images/15.png)Lo primero es dar clic en el botón de Run
 
 La primera ventana que aparece es para seleccionar el tipo de grafo que deseas trabajar, debes seleccionar una opción y a continuación pulsar el botón Ok
 
 ![](images/16.png)
 
-
-
-
-
-
-
-
 Después de esto te mostrará la ventana principal, donde encontraras las diferentes herramientas que te va a permitir trabajar con los grafos. A continuación, una explicación de las diferentes opciones que contiene:
 
 
 
-1. ## <a name="_toc2034696993"></a>Agregar arista
+## <a name="addEdge"></a>Agregar arista
 
 Este botón es para agregar una nueva arista al grafo, este botón solo se habilita cuando los campos nodo origen, nodo destino y peso estén llenos, el programa busca en el grafo  la existencia de esos nodos para crear la arista de conexión, si los nodos registrados no existen, la inteligencia crea dichos nodos para asignar la arista ingresada. 
 
@@ -161,20 +113,17 @@ En caso de tratarse de grafos dirigidos, la arista se mostrará con una flecha.
 
 Para el campo peso, se valida que en este solo se ingresen valores numéricos para ser aceptado.
 
-![Chart
+![](images/17.png)
 
-Description automatically generated with low confidence](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.017.png)
-1. ## <a name="_toc1962161642"></a>Agregar nodo
+## <a name="addNode"></a>Agregar nodo
 
 Este botón es para ingresar un nodo, se habilitará únicamente cuando el campo nombre nodo este lleno con algún registro, para habilitarse el verifica que este no exista dentro del grafo, en caso de exista, la inteligencia del algoritmo hace que no se dibuje nuevamente.
 
 En el campo nombre nodo, se permite cualquier combinación de caracteres.
 
-![Graphical user interface
+![](images/18.png)
 
-Description automatically generated with medium confidence](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.018.png)
-
-1. ## <a name="_toc90221320"></a>Eliminar nodo
+## <a name="addNode"></a>Eliminar nodo
 
 Este botón es para eliminar un nodo existente, solo se habilitará cuando se ingrese un registro dentro del campo nombre nodo a eliminar.
 
@@ -184,101 +133,63 @@ Nota: si se elimina un nodo, este eliminara todas las aristas que conecten con �
 
 En el campo nombre nodo, se permite cualquier combinación de caracteres.
 
-![Graphical user interface, application
+![](images/19.png)
 
-Description automatically generated](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.019.png)![Graphical user interface, application
-
-Description automatically generated](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.020.png) 
+![](images/20.png) 
 
 
 
-1. ## <a name="_toc1403582429"></a>Archivo
+## <a name="file"></a>Archivo
 Este botón despliega varias funcionalidades
 
-![Text
-
-Description automatically generated with medium confidence](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.021.png)
-1. ### <a name="_toc2064683488"></a>Abrir 
+![](images/21.png)
+### <a name="open"></a>Abrir 
 Abre una ventana donde nos permite seleccionar un archivo JSON, y posteriormente pulsar en abrir, para cargar a nuestra aplicación un grafo guardado antes. Este archivo debe contener la estructura precisa para que nuestra aplicación pueda leer sin problemas los datos. 
 
-Nota: se recomienda abrir archivos generados dentro de la misma aplicación.
-### <a name="_toc1561267582"></a>  4.2	Guardar 
-![A screenshot of a computer
+> Nota:
+> 
+> Se recomienda abrir archivos generados dentro de la misma aplicación.
+### <a name="save"></a>Guardar 
+![](images/22.png)Esta opción permite sobrescribir (actualizar) un archivo sobre el cual estamos trabajando, en caso de ser un grafo que aun no se ha guardado, redirige a la funcionalidad del botón Guardar Como.
+3. ### <a name="saveAs"></a>Guardar Como
+![](images/23.png)
 
-Description automatically generated](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.022.png)Esta opción permite sobrescribir (actualizar) un archivo sobre el cual estamos trabajando, en caso de ser un grafo que aun no se ha guardado, redirige a la funcionalidad del botón Guardar Como.
-3. ### <a name="_toc793275974"></a>Guardar Como 
-![A screenshot of a computer
-
-Description automatically generated](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.023.png)Este botón abre una ventana donde podemos dar una ruto para almacenar nuestro archivo, adicionalmente nos permite agregarle un nombre, para posteriormente poder acceder a un trabajo ya realizado.
+Este botón abre una ventana donde podemos dar una ruto para almacenar nuestro archivo, adicionalmente nos permite agregarle un nombre, para posteriormente poder acceder a un trabajo ya realizado.
 
 
-### <a name="_toc1940673019"></a>4.4 Exportar 
+### <a name="export"></a>Exportar 
 Permite exportar el grafo en formatos csv, PNG y pdf , abre una ventana donde nos permite asignarle el nombre del archivo y la ubicación donde deseamos almacenarlo para posteriormente analizarlo.
 
-![A screenshot of a computer
+![](images/24.png)
 
-Description automatically generated](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.024.png)
+![](images/25.png)
 
-![Graphical user interface, text, application, email
+![](images/26.png)
 
-Description automatically generated](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.025.png)
+![](images/27.png)
 
-![A screenshot of a computer
+![](images/28.png)
 
-Description automatically generated](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.026.png)
+![](images/29.png)
 
-![Chart, line chart
-
-Description automatically generated](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.027.png)
-
-![A screenshot of a computer
-
-Description automatically generated](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.028.png)
-
-
-
-
-
-
-
-
-
-![A screenshot of a computer
-
-Description automatically generated with medium confidence](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.029.png)
-
-
-
-
-
-
-
-
-
-
-
-### <a name="_toc604779195"></a>4.5 Importar datos
+### <a name="import"></a>Importar datos
 
 Abre una ventana donde nos permite seleccionar un archivo csv, y posteriormente pulsar en abrir, para cargar a nuestra aplicación un grafo guardado antes. Este archivo debe contener la estructura precisa para que nuestra aplicación pueda leer sin problemas los datos. 
 
 Nota: se recomienda abrir archivos generados dentro de la misma aplicación.
 
-![A screenshot of a computer
+![](images/30.png)
 
-Description automatically generated](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.030.png)
-
-### <a name="_toc734057429"></a>4.6 Imprimir
+### <a name="print"></a>Imprimir
 Esta funcionalidad permite imprimir el grafo realizado en nuestro programa.
 
-1. ## <a name="_toc1890617062"></a>Analizar
+## <a name="analyze"></a>Analizar
 
 Este botón nos permite analizar el grafo con diferentes algoritmos de partición implementados: Kernighan Lin, Algoritmo 3, Algoritmo k.
 
-![Graphical user interface
+![](images/31.png)
 
-Description automatically generated](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.031.png)
-
-1. ### <a name="_toc155889010"></a>Algoritmo Kernighan Lin
+### <a name="kernighanLin"></a>Algoritmo Kernighan Lin
 Este algoritmo de partición fue implementado mediante el uso de una función ya definida, la cual nos determinara mediante cálculos la forma en que nos partirá el grafo para que este quede lo más simétrico posible, mostrando como resultado en otra ventana, dos grafos que podemos diferenciar en el color de los nodos.
 
 `  `*<<Este algoritmo de partición, que se engloba dentro de los algoritmos de migración de grupos, que son algoritmos deterministas e iterativos, fue publicado en el año 1970 por B.Kernighan y S.Lin. Se trata de un algoritmo que, en su momento, tuvo bastante éxito y que ha servido de base para el desarrollo de numerosos métodos de placement.*
@@ -289,16 +200,13 @@ Este algoritmo de partición fue implementado mediante el uso de una función ya
 
 *El método comienza asignando aleatoriamente las 2N celdas a dos grupos A y B. Posteriormente, se van intercambiando celdas entre las dos particiones. Estos intercambios, implican un incremento o decremento del número de corte, que se representa mediante la ganancia g.*
 
-||
-| :- |
-||
-*La ganancia g, asociada al intercambio de dos celdas cualesquiera, se obtiene a partir del parámetro D que caracteriza a cada una de las celdas. Dicho parámetro, se define como la diferencia entre el número de interconexiones de la celda que atraviesan la separación entre particiones, y el número de interconexiones que no atraviesan dicha frontera. Así, el parámetro D, asociado a una celda ai, será: ![Ecuación 1](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.032.png)>>* (http://dte_recursos.webs.uvigo.es/)*
+*La ganancia, asociada al intercambio de dos celdas cualesquiera, se obtiene a partir del parámetro que caracteriza a cada una de las celdas. Dicho parámetro, se define como la diferencia entre el número de interconexiones de la celda que atraviesan la separación entre particiones, y el número de interconexiones que no atraviesan dicha frontera. Así, el parámetro D, asociado a una celda ai, será: 
 
-![A picture containing text, sky, different
+![](images/32.png)
 
-Description automatically generated](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.033.png)
+![](images/33.png)
 
-1. ### <a name="_toc114974196"></a>Algoritmo Girvan Newman
+1. ### <a name="girvanNewman"></a>Algoritmo Girvan Newman
 Este algoritmo trata de organizar el grafo en comunidades de forma jerárquica, eliminando los caminos por donde mas recurrencia se encuentre, luego de analizar todos los caminos posibles entre los nodos.
 
 
@@ -308,60 +216,38 @@ Este algoritmo trata de organizar el grafo en comunidades de forma jerárquica, 
 
 ![](images/34.png)
 
-1. ### <a name="_toc287520851"></a>Louvain
+1. ### <a name="louvain"></a>Algoritmo Louvain
 *La inspiración para este método de detección de comunidades es la optimización de la modularidad a medida que avanza el algoritmo. La modularidad es un valor de escala entre -0,5 (agrupación no modular) y 1 (agrupación completamente modular) que mide la densidad relativa de los bordes dentro de las comunidades con respecto a los bordes fuera de las comunidades. La optimización de este valor teóricamente da como resultado la mejor agrupación posible de los nodos de una red dada. Pero debido a que pasar por todas las posibles iteraciones de los nodos en grupos no es práctico, se utilizan algoritmos heurísticos.En el Método Louvain de detección de comunidades, primero se encuentran pequeñas comunidades optimizando la modularidad localmente en todos los nodos, luego cada pequeña comunidad se agrupa en un nodo y se repite el primer paso. El método es similar al método anterior de Clauset, Newman y Moore [3] que conecta comunidades cuya fusión produce el mayor aumento de modularidad.* (hmong.es)*
-1. ## <a name="_toc1581044200"></a>Ayuda
+## Ayuda
 Este botón nos permite dirigirnos a dos funcionalidades para conocer información adicional.
 
-![Graphical user interface, application
-
-Description automatically generated](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.035.png)
-1. ### <a name="_toc385075562"></a>Ayuda
+![](images/35.png)
+### <a name="help"></a>Ayuda
 Despliega una ventana, esta contiene información para el uso de la aplicación, desde la descarga, ejecución y exportación de trabajos.
-1. ### <a name="_toc652869875"></a>Acerca de Grafos
+### <a name="about"></a>Acerca de Grafos
 Despliega una ventana, esta contiene información sobre los grafos, para que consultes definiciones claves usadas en este proyecto.
 
 
-1. ## <a name="_toc462737294"></a>Visualizador del grafo
+## <a name="graphViewer"></a>Visualizador del grafo
 Es el espacio donde se va a imprimir en tiempo real la información relacionada con el grafo que estas trabajando, esto con el fin de que puedas analizarlo en el momento preciso de cada cambio, es de gran utilidad para realizar modificaciones.
-1. ## <a name="_toc1184103483"></a>Botones de control
+## <a name="controlButtons"></a>Botones de control
 Son los botones que permiten el control de la aplicación cuando está en ejecución: minimizar, maximizar y cerrar la aplicación, se encuentran en la parte superior derecha de la ventana.
 
-![Graphical user interface, application
+![](images/36.png)
 
-Description automatically generated](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.036.png)
-
-1. ## <a name="_toc933341666"></a>Actualizar
+## 9. <a name="refresh"></a>Actualizar
 Este botón refresca el contenido de la ventana generando la nueva posición del grafo.
 
-![Graphical user interface, application
-
-Description automatically generated](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.037.png)
+![](images/37.png)
 
 
-# <a name="_toc480329174"></a>**Atajos de teclado**
+
+# <a name="shortcuts"></a>**Atajos de teclado**
 
 Aquí encontraras algunas combinaciones de teclado que se implementaron en esta aplicación para facilitar la ejecución de algunas funcionalidades.
 
 |**Acción**|**Teclas**|
 | :-: | :-: |
-|Guardar archivo|![The best PowerPoint keyboard shortcuts | Laura M. Foley Design](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.038.png)|
-|Saltar de un input a otro|![Qué es la tecla ENTER? - CAVSI](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.039.jpeg)|
+|Guardar archivo|![](images/38.png)|
+|Saltar de un input a otro|![](images/39.jpeg)|
 
-
-# <a name="_toc1129490351"></a>**Referencias**
-
-grapheverywhere.com. (s.f.). *grapheverywhere.com.* Obtenido de https://www.grapheverywhere.com/algoritmo-de-girvan-newman/
-
-hmong.es. (s.f.). *hmong.es.* Obtenido de https://hmong.es/wiki/Louvain_modularity
-
-http://dte_recursos.webs.uvigo.es/. (s.f.). Obtenido de http://dte_recursos.webs.uvigo.es/: http://dte_recursos.webs.uvigo.es/recursos/multimedia/al4pda/KL.html
-
-Ramírez, L. M. (2020). *¿Qué es y cómo funciona el intérprete de Python?* Obtenido de ed.team: https://ed.team/blog/que-es-y-como-funciona-el-interprete-de-python
-
-
-
-![Ordenador](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.040.png)21
-
-[ref1]: Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.001.png
-[ref2]: Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.002.jpeg
