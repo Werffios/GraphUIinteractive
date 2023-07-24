@@ -5,52 +5,33 @@
 
 
 ## Tabla de Contenidos
-[Introducción](#introduction)
-[Descargar la aplicación](#download)
-[Ejecutar el proyecto](#run)
-1. [Agregar arista](#addEdge)
-2. [Agregar nodo](#addNode)
-3. [Eliminar nodo](#deleteNode)
-4. [Archivo](#file)
-    * [Abrir](#open)
-    * [Guardar](#save)
-    * [Guardar Como](#saveAs)
-    * [Exportar](#export)
-    * [Importar datos](#import)
-    * [Imprimir](#print)
-5. [Analizar](#analyze)
-    * [Algoritmo Kernighan Lin](#kernighanLin)
-
-[4.4 Exportar](#_toc1940673019)
-
-[4.5 Importar datos](#_toc604779195)
-
-[4.6 Imprimir](#_toc734057429)
-
-[5.	Analizar](#_toc1890617062)
-
-[5.1	Algoritmo Kernighan Lin](#_toc155889010)
-
-[5.2	Algoritmo Girvan Newman](#_toc114974196)
-
-[5.3	Algoritmo Louvain](#_toc287520851)
-
-[6.	Ayuda](#_toc1581044200)
-
-[6.1	Ayuda](#_toc385075562)
-
-[6.2	Acerca de Grafos](#_toc652869875)
-
-[7.	Visualizador del grafo](#_toc462737294)
-
-[8.	Botones de control](#_toc1184103483)
-
-[9.	Actualizar](#_toc933341666)
-
-[Atajos de teclado](#_toc480329174)
+1. [Introducción](#introduction)
+2. [Descargar la aplicación](#download)
+3. [Ejecutar el proyecto](#run)
+4. [Agregar arista](#addEdge)
+5. [Agregar nodo](#addNode)
+6. [Eliminar nodo](#deleteNode)
+7. [Archivo](#file)
+   * [Abrir](#open)
+   * [Guardar](#save)
+   * [Guardar Como](#saveAs)
+   * [Exportar](#export)
+   * [Importar datos](#import)
+   * [Imprimir](#print)
+8. [Analizar](#analyze)
+   * [Algoritmo Kernighan Lin](#kernighanLin)
+   * [Algoritmo Girvan Newman](#girvanNewman)
+   * [Algoritmo Louvain](#louvain)
+9. [Ayuda](#help)
+   * [Ayuda](#help)
+   * [Acerca de Grafos](#about)
+10. [Visualizador del grafo](#graphViewer)
+11. [Botones de control](#controlButtons)
+12. [Actualizar](#refresh)
+13. [Atajos de teclado](#shortcuts)
 
 
-# <a name="_toc40960658"></a><a name="_toc1041345429"></a>**Introducción**
+# <a name="introduction"></a>**Introducción**
 
 En este documento se pretende dar a conocer a quien lo lea la forma para descargar y ejecutar una aplicación realizada en Python 3, en la cual podemos graficar diferentes tipos de Grafos, aplicarles algoritmos de partición y exportar el grafo realizado en diferentes formatos.
 
