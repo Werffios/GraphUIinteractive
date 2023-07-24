@@ -1,7 +1,11 @@
 
 
 
-# APLICACIÓN INTERACTIVA PARA LA CREACIÓN, ANALÍSIS Y ESTUDIO DE GRAFOS
+# **APLICACIÓN INTERACTIVA PARA LA CREACIÓN, ANALÍSIS Y ESTUDIO DE GRAFOS**
+
+>[!IMPORTANT]
+> 
+> La documentación esta en proceso de traducción y ajuste a Markdown
 
 
 ## Tabla de Contenidos
@@ -36,38 +40,26 @@
 En este documento se pretende dar a conocer a quien lo lea la forma para descargar y ejecutar una aplicación realizada en Python 3, en la cual podemos graficar diferentes tipos de Grafos, aplicarles algoritmos de partición y exportar el grafo realizado en diferentes formatos.
 
 
+# <a name="download"></a>**Descargar la aplicación**
 
+Abrir el siguiente ***[link](https://github.com/Werffios/GraphUIinteractive.git)*** para acceder al repositorio del GitHub que contiene el archivo completo.
 
-
-
-
-
-
-
-
-
-
-
-
-# <a name="_toc824259429"></a>**Descargar la aplicación**
-## <a name="_toc2077702671"></a>Descargar el archivo comprimido
-Abrir el siguiente link <https://github.com/Werffios/GraphUIinteractive.git> para acceder al repositorio del GitHub que contiene el archivo completo.
-
-![](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.004.png)
+![](images/4.png)
 
 Luego, ir a la carpeta donde se guardo la descarga, sobre el archivo zip descargado darle clic derecho y extraer todo aquí.
 
-![](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.005.png)
-## <a name="_toc160345108"></a>Abrir el proyecto
-![](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.006.png)Sobre la carpeta que se extrajo, hacer clic derecho y abrir con el editor preferido para Python, recomendamos PyCharm.
+![](images/5.png)
 
-![](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.007.png)Al abrir nos pide aceptar confiabilidad del proyecto
+# <a name="run"></a>**Ejecutar el proyecto**
+![](images/6.png)Sobre la carpeta que se extrajo, hacer clic derecho y abrir con el editor preferido para Python, recomendamos PyCharm.
+
+![](images/7.png)Al abrir nos pide aceptar confiabilidad del proyecto
 
 Posteriormente debemos configurar el interprete con PyCharm para que el proyecto abra de manera correcta 
 
 *Un **intérprete** es un programa que directamente ejecuta instrucciones especificadas escrito en un lenguaje de alto nivel lo que significa que hace lo que el programa dice. Procesa el programa poco a poco, alternando la lectura de líneas de código y la realización de cálculos.* (Ramírez, 2020)*
 
-![](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.008.png)Vamos a configurar el interprete de Python para importar sv-ttk de forma manual, para ello hacemos clic en ajustes
+![](images/8.png)Vamos a configurar el interprete de Python para importar sv-ttk de forma manual, para ello hacemos clic en ajustes
 
 Luego damos clic en settings
 
@@ -77,7 +69,7 @@ Description automatically generated](Aspose.Words.aeed8737-e99b-416e-9723-d44143
 
 Escribimos en el buscador, interprete y seleccionamos Python interpreter, ahora le damos clic en instalar
 
-![](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.010.png)
+![](images/10.png)
 
 
 
@@ -94,15 +86,15 @@ Escribimos en el buscador, interprete y seleccionamos Python interpreter, ahora 
 
 En la barra de búsqueda escribimos sv-ttk, seleccionamos ese paquete  para posteriormente darle en el botón install ubicado en la parte inferior de la ventana.
 
-![](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.011.png)
+![](images/11.png)
 
 Ya tendríamos instalado el paquete que nos hacia falta,.
 
 Ahora vamos a ejecutar el programa, si  no te aparece habilitado el botón para ejecutar,asi:
 
-![](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.012.png)
+![](images/12.png)
 
-![](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.013.png)Debemos indicarle que deseamos ejecutar, para ello hacemos clic en el botón que indica la siguiente imagen
+![](images/13.png)Debemos indicarle que deseamos ejecutar, para ello hacemos clic en el botón que indica la siguiente imagen
 
 
 
@@ -136,19 +128,19 @@ Actualizar
 
 **9**
 
-![](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.014.png)
+![](images/14.png)
 
 
 
 
 # <a name="_toc2092670558"></a>**Ejecutar el proyecto**
 
-![](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.015.png)Lo primero es dar clic en el botón de Run 
+![](images/15.png)Lo primero es dar clic en el botón de Run 
 
 
 La primera ventana que aparece es para seleccionar el tipo de grafo que deseas trabajar, debes seleccionar una opción y a continuación pulsar el botón Ok
 
-![](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.016.png)
+![](images/16.png)
 
 
 
@@ -314,7 +306,7 @@ Este algoritmo trata de organizar el grafo en comunidades de forma jerárquica, 
 
 *Este método busca en vez de construir una medida que nos indica cuales enlaces serían los más importantes para las comunidades, se centra en mostrar cuáles enlaces poseen mayor probabilidad entre comunidades. Descubramos un poco más sobre su funcionamiento.* (grapheverywhere.com)*
 
-![](Aspose.Words.aeed8737-e99b-416e-9723-d4414384b0fc.034.png)
+![](images/34.png)
 
 1. ### <a name="_toc287520851"></a>Louvain
 *La inspiración para este método de detección de comunidades es la optimización de la modularidad a medida que avanza el algoritmo. La modularidad es un valor de escala entre -0,5 (agrupación no modular) y 1 (agrupación completamente modular) que mide la densidad relativa de los bordes dentro de las comunidades con respecto a los bordes fuera de las comunidades. La optimización de este valor teóricamente da como resultado la mejor agrupación posible de los nodos de una red dada. Pero debido a que pasar por todas las posibles iteraciones de los nodos en grupos no es práctico, se utilizan algoritmos heurísticos.En el Método Louvain de detección de comunidades, primero se encuentran pequeñas comunidades optimizando la modularidad localmente en todos los nodos, luego cada pequeña comunidad se agrupa en un nodo y se repite el primer paso. El método es similar al método anterior de Clauset, Newman y Moore [3] que conecta comunidades cuya fusión produce el mayor aumento de modularidad.* (hmong.es)*
